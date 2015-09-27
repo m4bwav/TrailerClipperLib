@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TrailerClipperLib;
@@ -14,7 +13,7 @@ namespace TClipper
         {
             if (args == null || args.Length < 2 || args.Length > 3)
             {
-                const string errorMessage = "Incorrect parameters, try 'TClipper <input_directory_path> <trailer_duration_in_milliseconds>'";
+                const string errorMessage = "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'";
                 Console.WriteLine(errorMessage);
                 return;
             }
