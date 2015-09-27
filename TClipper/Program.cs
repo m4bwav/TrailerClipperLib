@@ -58,12 +58,15 @@ namespace TClipper
             {
                 switch (loweredArg)
                 {
+                    case "-m":
                     case "-multi":
                         options.MultiTaskFiles = true;
                         break;
                     case "-cf":
+                    case "-consoleoff":
                         options.OutputToConsole = false;
                         break;
+                    case "-a":
                     case "-all":
                         options.ProcessEveryFile = true;
                         break;
