@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TrailerClipperLib;
@@ -43,16 +44,14 @@ namespace TClipper
             Clipper.RemoveTrailers(inputDirectoryPath, newDurationInMilliseconds, options);
         }
 
-        private static TrailerClipperOptions ProcessInputOptions(string[] args)
+        private static TrailerClipperOptions ProcessInputOptions(IEnumerable<string> args)
         {
             var options = new TrailerClipperOptions
             {
                 OutputToConsole = true
             };
 
-            var optionsArguments = args.Where(x => x.Trim().StartsWith("-"));
-
-            var trimmedOptionArgs = optionsArguments.Select(argument => argument.ToLower().Trim());
+            var trimmedOptionArgs = PrepArguments(args);
 
             foreach (var loweredArg in trimmedOptionArgs)
             {
@@ -74,6 +73,13 @@ namespace TClipper
             }
 
             return options;
+        }
+
+        private static IEnumerable<string> PrepArguments(IEnumerable<string> args)
+        {
+            var optionsArguments = args.Where(x => x.Trim().StartsWith("-"));
+
+            return optionsArguments.Select(argument => argument.ToLower().Trim());
         }
     }
 }
