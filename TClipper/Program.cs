@@ -12,14 +12,16 @@ namespace TClipper
 
         private static void Main(string[] args)
         {
-            if (args == null || args.Length < 2 || args.Length > 3)
+            if (args == null || args.Length < 2)
             {
                 const string errorMessage = "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'";
                 Console.WriteLine(errorMessage);
                 return;
             }
 
-            var inputDirectoryPath = args[0];
+            var argsLength = args.Length;
+
+            var inputDirectoryPath = args[argsLength - 2];
 
             if (!Directory.Exists(inputDirectoryPath))
             {
@@ -28,7 +30,7 @@ namespace TClipper
                 return;
             }
 
-            var durationArg = args[1];
+            var durationArg = args[argsLength - 1];
 
             double newDurationInMilliseconds;
 
