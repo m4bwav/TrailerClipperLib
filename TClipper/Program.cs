@@ -119,9 +119,9 @@ namespace TClipper
 
         private static void InitializeIntroRemovalOptions(string[] args, int iii, TrailerClipperOptions options)
         {
-            double introLengthInMilliseconds;
+            decimal introLengthInMilliseconds;
 
-            if (!double.TryParse(args[iii], out introLengthInMilliseconds))
+            if (!decimal.TryParse(args[iii], out introLengthInMilliseconds))
             {
                 throw new ArgumentOutOfRangeException("args");
             }
