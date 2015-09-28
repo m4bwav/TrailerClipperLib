@@ -58,7 +58,10 @@ namespace TClipper
             }
             else
             {
-                options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
+                var argBefore = args[argsLength - 2].Trim().ToLower();
+
+                if (argBefore != "-i" && argBefore != "-intro")
+                    options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
             }
 
 
@@ -123,7 +126,7 @@ namespace TClipper
 
             if (!decimal.TryParse(args[iii], out introLengthInMilliseconds))
             {
-                throw new ArgumentOutOfRangeException("args");
+                throw new ArgumentOutOfRangeException(nameof(args));
             }
 
             options.IntroLengthInMilliseconds = introLengthInMilliseconds;

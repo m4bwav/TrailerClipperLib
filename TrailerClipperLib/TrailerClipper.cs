@@ -117,7 +117,9 @@ namespace TrailerClipperLib
             if (clipperOptions.RemoveIntro)
                 seekToPosition = TimeSpan.FromMilliseconds(Convert.ToDouble(clipperOptions.IntroLengthInMilliseconds));
 
-            options.CutMedia(seekToPosition, newDurationTimeSpan);
+            var lengthSpan = newDurationTimeSpan.Subtract(seekToPosition);
+
+            options.CutMedia(seekToPosition, lengthSpan);
 
             return options;
         }
