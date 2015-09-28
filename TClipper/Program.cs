@@ -21,7 +21,41 @@ namespace TClipper
 
             var options = ProcessInputOptions(args);
 
-            if (options.SingleFileMode)
+            if (!options.SingleFileMode)
+            {
+                var inputDirectoryPath = args[argsLength - 2];
+
+                options.InputDirectoryPath = inputDirectoryPath;
+            }
+
+            var lastArgument = args[argsLength - 1];
+
+            decimal trailerLengthInMilliSeconds;
+
+            if (!decimal.TryParse(lastArgument, out trailerLengthInMilliSeconds))
+            {
+                if (!options.RemoveIntro || options.IntroLengthInMilliseconds == default(decimal))
+                {
+                    string errorMessage = $"Incorrect parameter, new duration in milliseconds: '{lastArgument}' cannot be parsed";
+                    Console.WriteLine(errorMessage);
+                    return;
+                }
+
+                options.InputDirectoryPath = lastArgument;
+            }
+            else if (!options.RemoveIntro)
+                options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
+
+            if (!options.SingleFileMode)
+            {
+                if (!Directory.Exists(options.InputDirectoryPath) && !options.RemoveIntro)
+                {
+                    string errorMessage = $"Incorrect parameter, input directory: '{options.InputDirectoryPath}' does not exist";
+                    Console.WriteLine(errorMessage);
+                    return;
+                }
+            }
+            else
             {
                 if (!File.Exists(options.SingleFileName))
                 {
@@ -30,40 +64,6 @@ namespace TClipper
                     return;
                 }
             }
-            else
-            {
-                var inputDirectoryPath = args[argsLength - 2];
-
-                if (!Directory.Exists(inputDirectoryPath))
-                {
-                    string errorMessage = $"Incorrect parameter, input directory: '{inputDirectoryPath}' does not exist";
-                    Console.WriteLine(errorMessage);
-                    return;
-                }
-
-                options.InputDirectoryPath = inputDirectoryPath;
-            }
-            var durationArg = args[argsLength - 1];
-
-            decimal trailerLengthInMilliSeconds;
-
-            if (!decimal.TryParse(durationArg, out trailerLengthInMilliSeconds))
-            {
-                if (!options.RemoveIntro || options.IntroLengthInMilliseconds == default(decimal))
-                {
-                    string errorMessage = $"Incorrect parameter, new duration in milliseconds: '{durationArg}' cannot be parsed";
-                    Console.WriteLine(errorMessage);
-                    return;
-                }
-            }
-            else
-            {
-                var argBefore = args[argsLength - 2].Trim().ToLower();
-
-                if (argBefore != "-i" && argBefore != "-intro")
-                    options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
-            }
-
 
             Clipper.RemoveTrailers(options);
         }
@@ -71,7 +71,7 @@ namespace TClipper
         private static TrailerClipperOptions ProcessInputOptions(string[] args)
         {
             var options = new TrailerClipperOptions();
-            
+
             for (var iii = 0; iii < args.Length; iii++)
             {
                 var currentArg = args[iii].Trim().ToLower();
