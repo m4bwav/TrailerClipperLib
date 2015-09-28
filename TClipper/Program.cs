@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using TrailerClipperLib;
 
 namespace TClipper
@@ -21,44 +19,86 @@ namespace TClipper
 
             var argsLength = args.Length;
 
-            var inputDirectoryPath = args[argsLength - 2];
-
-            if (!Directory.Exists(inputDirectoryPath))
-            {
-                string errorMessage = $"Incorrect parameter, input directory: '{inputDirectoryPath}' does not exist";
-                Console.WriteLine(errorMessage);
-                return;
-            }
-
-            var durationArg = args[argsLength - 1];
-
-            double newDurationInMilliseconds;
-
-            if (!double.TryParse(durationArg, out newDurationInMilliseconds))
-            {
-                string errorMessage = $"Incorrect parameter, new duration in milliseconds: '{durationArg}' cannot be parsed";
-                Console.WriteLine(errorMessage);
-                return;
-            }
-
             var options = ProcessInputOptions(args);
 
-            Clipper.RemoveTrailers(inputDirectoryPath, newDurationInMilliseconds, options);
+            if (options.SingleFileMode)
+            {
+                if (!File.Exists(options.SingleFileName))
+                {
+                    string errorMessage = $"Incorrect parameter, input file: '{options.SingleFileName}' does not exist";
+                    Console.WriteLine(errorMessage);
+                    return;
+                }
+            }
+            else
+            {
+                var inputDirectoryPath = args[argsLength - 2];
+
+                if (!Directory.Exists(inputDirectoryPath))
+                {
+                    string errorMessage = $"Incorrect parameter, input directory: '{inputDirectoryPath}' does not exist";
+                    Console.WriteLine(errorMessage);
+                    return;
+                }
+
+                options.InputDirectoryPath = inputDirectoryPath;
+            }
+            var durationArg = args[argsLength - 1];
+
+            decimal trailerLengthInMilliSeconds;
+
+            if (!decimal.TryParse(durationArg, out trailerLengthInMilliSeconds))
+            {
+                if (!options.RemoveIntro || options.IntroLengthInMilliseconds == default(decimal))
+                {
+                    string errorMessage = $"Incorrect parameter, new duration in milliseconds: '{durationArg}' cannot be parsed";
+                    Console.WriteLine(errorMessage);
+                    return;
+                }
+            }
+            else
+            {
+                options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
+            }
+
+
+            Clipper.RemoveTrailers(options);
         }
 
-        private static TrailerClipperOptions ProcessInputOptions(IEnumerable<string> args)
+        private static TrailerClipperOptions ProcessInputOptions(string[] args)
         {
             var options = new TrailerClipperOptions
             {
                 OutputToConsole = true
             };
 
-            var trimmedOptionArgs = PrepArguments(args);
 
-            foreach (var loweredArg in trimmedOptionArgs)
+            for (var iii = 0; iii < args.Length; iii++)
             {
-                switch (loweredArg)
+                var currentArg = args[iii].Trim().ToLower();
+
+                if (!currentArg.StartsWith("-"))
+                    continue;
+
+                switch (currentArg)
                 {
+                    case "-i":
+                    case "-intro":
+                        options.RemoveIntro = true;
+                        iii++;
+                        if (args.Length <= iii)
+                            break;
+
+                        InitializeIntroRemovalOptions(args, iii, options);
+                        break;
+                    case "-f":
+                    case "-file":
+                        options.SingleFileMode = true;
+                        iii++;
+                        if (args.Length <= iii)
+                            break;
+                        options.SingleFileName = args[iii];
+                        break;
                     case "-m":
                     case "-multi":
                         options.MultiTaskFiles = true;
@@ -68,7 +108,7 @@ namespace TClipper
                         options.OutputToConsole = false;
                         break;
                     case "-a":
-                    case "-all":
+                    case "-allfiles":
                         options.ProcessEveryFile = true;
                         break;
                 }
@@ -77,11 +117,16 @@ namespace TClipper
             return options;
         }
 
-        private static IEnumerable<string> PrepArguments(IEnumerable<string> args)
+        private static void InitializeIntroRemovalOptions(string[] args, int iii, TrailerClipperOptions options)
         {
-            var optionsArguments = args.Where(x => x.Trim().StartsWith("-"));
+            double introLengthInMilliseconds;
 
-            return optionsArguments.Select(argument => argument.ToLower().Trim());
+            if (!double.TryParse(args[iii], out introLengthInMilliseconds))
+            {
+                throw new ArgumentOutOfRangeException("args");
+            }
+
+            options.IntroLengthInMilliseconds = introLengthInMilliseconds;
         }
     }
 }

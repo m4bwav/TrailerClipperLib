@@ -10,7 +10,7 @@ namespace TrailerClipperLib
 {
     public interface ITrailerClipperService
     {
-        void RemoveTrailers(string directoryPath, double trailerLengthInMilliSeconds, TrailerClipperOptions options = null);
+        void RemoveTrailers(TrailerClipperOptions options);
     }
 
     public class TrailerClipper : ITrailerClipperService
@@ -18,28 +18,49 @@ namespace TrailerClipperLib
         private const string DefaultOutputDirectory = @"\clipped";
         private readonly ICollection<string> _validFileExtensions = new[] {"mp4", "flv", "avi", "mpg"};
 
-        public void RemoveTrailers(string directoryPath, double trailerLengthInMilliSeconds, TrailerClipperOptions options = null)
+        public void RemoveTrailers(TrailerClipperOptions options)
         {
             if (options == null)
-                options = new TrailerClipperOptions();
+                throw new ArgumentNullException(nameof(options));
+
+            if (options.SingleFileMode)
+                ExecuteSingleFileMode(options);
+            else
+                ExecuteDirectoryMode(options);
+        }
+
+        private void ExecuteSingleFileMode(TrailerClipperOptions options)
+        {
+            var singleFile = options.SingleFileName;
+
+            if (string.IsNullOrWhiteSpace(singleFile))
+                throw new ArgumentOutOfRangeException(nameof(options), " file name: " + singleFile + " is invalid.");
+
+
+            RemoveTrailerFromFile(singleFile, options);
+        }
+
+        private void ExecuteDirectoryMode(TrailerClipperOptions options)
+        {
+            var directoryPath = options.InputDirectoryPath;
 
             var files = Directory.GetFiles(directoryPath);
 
             if (options.MultiTaskFiles)
-                Parallel.ForEach(files, filePath => RemoveTrailerFromFile(trailerLengthInMilliSeconds, filePath, options));
+                Parallel.ForEach(files, filePath => RemoveTrailerFromFile(filePath, options));
             else
                 foreach (var filePath in files)
-                    RemoveTrailerFromFile(trailerLengthInMilliSeconds, filePath, options);
+                    RemoveTrailerFromFile(filePath, options);
         }
 
-        private void RemoveTrailerFromFile(double trailerLengthInMilliSeconds, string filePath, TrailerClipperOptions options)
+        private void RemoveTrailerFromFile(string filePath, TrailerClipperOptions options)
         {
             if (!options.ProcessEveryFile && IsNotAValidMediaFile(filePath))
                 return;
 
             var durationInMilliseconds = GetDurationOfMediaFile(filePath);
 
-            var newDuration = durationInMilliseconds - trailerLengthInMilliSeconds;
+            var newDuration = durationInMilliseconds - options.TrailerLengthInMilliSeconds;
 
             if (options.OutputToConsole)
                 Console.WriteLine("Starting on file: " + filePath);
@@ -47,7 +68,7 @@ namespace TrailerClipperLib
             TrimFileToNewDuration(filePath, newDuration, options);
         }
 
-        private static void TrimFileToNewDuration(string inputFilePath, double newDurationInMilliseconds, TrailerClipperOptions clipperOptions)
+        private static void TrimFileToNewDuration(string inputFilePath, decimal newDurationInMilliseconds, TrailerClipperOptions clipperOptions)
         {
             var outputFilePath = ComputeOutputFilePath(inputFilePath, clipperOptions.OutputDirectoryPath);
 
@@ -55,7 +76,7 @@ namespace TrailerClipperLib
 
             var outputFile = new MediaFile {Filename = outputFilePath};
 
-            var options = InitializeClippingData(newDurationInMilliseconds);
+            var options = InitializeClippingData(newDurationInMilliseconds, clipperOptions);
 
             using (var engine = new Engine())
             {
@@ -83,25 +104,34 @@ namespace TrailerClipperLib
             return outputDirectoryPath + @"\" + outputFileName;
         }
 
-        private static ConversionOptions InitializeClippingData(double newDurationInMilliseconds)
+        private static ConversionOptions InitializeClippingData(decimal newDurationInMilliseconds, TrailerClipperOptions clipperOptions)
         {
             var options = new ConversionOptions();
 
-            var newDurationTimeSpan = TimeSpan.FromMilliseconds(newDurationInMilliseconds);
+            var newDuration = Convert.ToDouble(newDurationInMilliseconds);
 
-            options.CutMedia(TimeSpan.Zero, newDurationTimeSpan);
+            var newDurationTimeSpan = TimeSpan.FromMilliseconds(newDuration);
+
+            var seekToPosition = TimeSpan.Zero;
+
+            if (clipperOptions.RemoveIntro)
+                seekToPosition = TimeSpan.FromMilliseconds(Convert.ToDouble(clipperOptions.IntroLengthInMilliseconds));
+
+            options.CutMedia(seekToPosition, newDurationTimeSpan);
 
             return options;
         }
 
-        private static double GetDurationOfMediaFile(string filePath)
+        private static decimal GetDurationOfMediaFile(string filePath)
         {
             var inputFile = new MediaFile {Filename = filePath};
 
             using (var engine = new Engine())
                 engine.GetMetadata(inputFile);
 
-            return inputFile.Metadata.Duration.TotalMilliseconds;
+            var durationOfMediaFile = inputFile.Metadata.Duration.TotalMilliseconds;
+
+            return Convert.ToDecimal(durationOfMediaFile);
         }
 
         private bool IsNotAValidMediaFile(string file)
