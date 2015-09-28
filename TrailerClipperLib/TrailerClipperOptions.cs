@@ -2,6 +2,11 @@
 {
     public class TrailerClipperOptions
     {
+        public TrailerClipperOptions()
+        {
+            OutputToConsole = true;
+        }
+
         public bool OutputToConsole { get; set; }
         public bool MultiTaskFiles { get; set; }
         public string OutputDirectoryPath { get; set; }

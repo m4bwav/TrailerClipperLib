@@ -70,12 +70,8 @@ namespace TClipper
 
         private static TrailerClipperOptions ProcessInputOptions(string[] args)
         {
-            var options = new TrailerClipperOptions
-            {
-                OutputToConsole = true
-            };
-
-
+            var options = new TrailerClipperOptions();
+            
             for (var iii = 0; iii < args.Length; iii++)
             {
                 var currentArg = args[iii].Trim().ToLower();
