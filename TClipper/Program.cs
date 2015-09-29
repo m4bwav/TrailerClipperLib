@@ -43,8 +43,13 @@ namespace TClipper
 
                 options.InputDirectoryPath = lastArgument;
             }
-            else if (!options.RemoveIntro)
-                options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
+            else
+            {
+                var secondToLastArg = args[argsLength - 2].Trim().ToLower();
+
+                if(secondToLastArg != "-i" && secondToLastArg != "-intro")
+                    options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
+            }
 
             if (!options.SingleFileMode)
             {
