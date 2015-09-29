@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>TrailerClipper</id>
+    <version>1.0.0</version>
+    <title>TrailerClipper</title>
+    <authors>Mark Rogers</authors>
+    <owners>Mark Rogers</owners>
+    <licenseUrl>https://github.com/m4bwav/TrailerClipperLib/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/m4bwav/TrailerClipperLib</projectUrl>
+    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<summary>Batch trailer and intro video/audio clipper.</summary>
+    <description>Batch trailer and intro video/audio clipper.</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Video Audio mp4 clipper trailer</tags>
+  </metadata>
+</package>
