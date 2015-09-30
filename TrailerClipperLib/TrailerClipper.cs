@@ -8,16 +8,26 @@ using MediaToolkit.Options;
 
 namespace TrailerClipperLib
 {
+    /// <summary>
+    ///     Batch clips the trailers from video files
+    /// </summary>
     public interface ITrailerClipperService
     {
         void RemoveTrailers(TrailerClipperOptions options);
     }
 
+    /// <summary>
+    ///     Batch clips the trailers from video files
+    /// </summary>
     public class TrailerClipper : ITrailerClipperService
     {
         private const string DefaultOutputDirectory = @"\clipped";
         private readonly ICollection<string> _validFileExtensions = new[] {"mp4", "flv", "avi", "mpg"};
 
+        /// <summary>
+        ///     Execute the removal of trailers and/or intros as specificed in the options
+        /// </summary>
+        /// <param name="options">Contains the various clipping options and target paths.  Cannot be null</param>
         public void RemoveTrailers(TrailerClipperOptions options)
         {
             if (options == null)

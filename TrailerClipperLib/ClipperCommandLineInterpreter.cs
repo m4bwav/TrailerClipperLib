@@ -3,13 +3,24 @@ using System.IO;
 
 namespace TrailerClipperLib
 {
+    /// <summary>
+    ///     Used to intrepret and process command-line arguments into clipper options
+    /// </summary>
     public interface ICommandLineInterpreter
     {
         TrailerClipperOptions ParseCommandLineArgs(string[] args);
     }
 
+    /// <summary>
+    ///     Used to intrepret and process command-line arguments into clipper options
+    /// </summary>
     public class ClipperCommandLineInterpreter : ICommandLineInterpreter
     {
+        /// <summary>
+        ///     Process the input args into clipper options
+        /// </summary>
+        /// <param name="args">The input console app arguments</param>
+        /// <returns>Valid clipper options or null if there was an issue</returns>
         public TrailerClipperOptions ParseCommandLineArgs(string[] args)
         {
             if (args == null || args.Length < 2)
