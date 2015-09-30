@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClipperCommandLineInterpreter.cs" />
     <Compile Include="TrailerClipper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrailerClipperOptions.cs" />
