@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace TrailerClipperLib
 {
@@ -57,6 +58,8 @@ namespace TrailerClipperLib
                     options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
             }
 
+            options.InputPath = args[argsLength - 2];
+
             if (!Directory.Exists(options.InputPath) && !File.Exists(options.InputPath))
             {
                 string errorMessage = $"Incorrect parameter, input directory or file: '{options.InputPath}' does not exist";
@@ -65,6 +68,19 @@ namespace TrailerClipperLib
             }
 
             return options;
+        }
+
+        public string ReadConfigFilePath(string[] args)
+        {
+            if (args == null || args.Length < 1)
+                return null;
+
+            var currentArg = args[0].Trim().ToLower();
+
+            if (currentArg != "-c" && currentArg != "-config")
+                return null;
+
+            return args[1];
         }
 
         private static TrailerClipperOptions ProcessInputOptions(string[] args)
@@ -117,6 +133,23 @@ namespace TrailerClipperLib
             }
 
             options.IntroLengthInMilliseconds = introLengthInMilliseconds;
+        }
+
+        public bool ShouldDumpConfigFile(string[] args)
+        {
+            return args.Any(x => x.Trim().ToLower() == "-d" || x.Trim().ToLower() == "-o");
+        }
+
+        public string ReadConfigOutputPath(string[] args)
+        {
+            var trimmedArgs = args.Select(x => x.Trim().ToLower()).ToArray();
+
+            if (!trimmedArgs.Contains("-o"))
+                return null;
+
+            var index = Array.IndexOf(trimmedArgs, "-o");
+
+            return args[index + 1];
         }
     }
 }
