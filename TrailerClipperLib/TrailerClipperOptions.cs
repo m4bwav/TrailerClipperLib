@@ -1,4 +1,6 @@
-﻿namespace TrailerClipperLib
+﻿using System.IO;
+
+namespace TrailerClipperLib
 {
     /// <summary>
     ///     The data on the type of clipping and the files to clip for the trailer clipper to use to execute a video file clip.
@@ -11,6 +13,20 @@
         public TrailerClipperOptions()
         {
             OutputToConsole = true;
+        }
+
+        /// <summary>
+        ///     Sets input path and OutputToConsole to true
+        /// </summary>
+        /// <param name="path">Input file path</param>
+        public TrailerClipperOptions(string path) : this()
+        {
+            InputPath = path;
+        }
+
+        public TrailerClipperOptions(string path, decimal milliseconds) : this(path)
+        {
+            TrailerLengthInMilliSeconds = milliseconds;
         }
 
         /// <summary>
@@ -35,17 +51,6 @@
         public bool ProcessEveryFile { get; set; }
 
         /// <summary>
-        ///     If true use property 'SingleFileName' as a path to process only a single video file,
-        ///     rather than the default batch processing mode which uses the path InputDirectoryPath
-        /// </summary>
-        public bool SingleFileMode { get; set; }
-
-        /// <summary>
-        ///     When 'SingleFileMode' is set to true, this value will be used as the path of the single file to process
-        /// </summary>
-        public string SingleFileName { get; set; }
-
-        /// <summary>
         ///     If set to true, the 'IntroLengthInMilliseconds' value will be used to remove the front intro up to that many
         ///     milliseconds.
         ///     This can be used with or without the trailer clipping functionality
@@ -59,14 +64,26 @@
         public decimal IntroLengthInMilliseconds { get; set; }
 
         /// <summary>
-        ///     When 'SingleFileMode' is set to false, this is the directory that is used to load files for clipping.  All files
-        ///     that match known file extensions will be loaded, unless ' ProcessEveryFile' is set to true.
+        ///     The path can be a file or a directory.  if it is a directory all valid files will be processed in that directory.
         /// </summary>
-        public string InputDirectoryPath { get; set; }
+        public string InputPath { get; set; }
 
         /// <summary>
         ///     The length of the trailer in milliseconds to remove from the end of the video/audio file
         /// </summary>
         public decimal TrailerLengthInMilliSeconds { get; set; }
+
+
+        public bool OutputClippingConfigToFile { get; set; }
+        public string ClippingConfigOutputFilePath { get; set; }
+        public bool IsInputPathADirectory
+        {
+            get
+            {
+                var attr = File.GetAttributes(InputPath);
+
+                return attr.HasFlag(FileAttributes.Directory);
+            }
+        }
     }
 }

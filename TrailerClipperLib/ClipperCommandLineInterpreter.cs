@@ -34,13 +34,6 @@ namespace TrailerClipperLib
 
             var options = ProcessInputOptions(args);
 
-            if (!options.SingleFileMode)
-            {
-                var inputDirectoryPath = args[argsLength - 2];
-
-                options.InputDirectoryPath = inputDirectoryPath;
-            }
-
             var lastArgument = args[argsLength - 1];
 
             decimal trailerLengthInMilliSeconds;
@@ -54,7 +47,7 @@ namespace TrailerClipperLib
                     return null;
                 }
 
-                options.InputDirectoryPath = lastArgument;
+                options.InputPath = lastArgument;
             }
             else
             {
@@ -64,24 +57,13 @@ namespace TrailerClipperLib
                     options.TrailerLengthInMilliSeconds = trailerLengthInMilliSeconds;
             }
 
-            if (!options.SingleFileMode)
+            if (!Directory.Exists(options.InputPath) && !File.Exists(options.InputPath))
             {
-                if (!Directory.Exists(options.InputDirectoryPath) && !options.RemoveIntro)
-                {
-                    string errorMessage = $"Incorrect parameter, input directory: '{options.InputDirectoryPath}' does not exist";
-                    Console.WriteLine(errorMessage);
-                    return null;
-                }
+                string errorMessage = $"Incorrect parameter, input directory or file: '{options.InputPath}' does not exist";
+                Console.WriteLine(errorMessage);
+                return null;
             }
-            else
-            {
-                if (!File.Exists(options.SingleFileName))
-                {
-                    string errorMessage = $"Incorrect parameter, input file: '{options.SingleFileName}' does not exist";
-                    Console.WriteLine(errorMessage);
-                    return null;
-                }
-            }
+
             return options;
         }
 
@@ -106,14 +88,6 @@ namespace TrailerClipperLib
                             break;
 
                         InitializeIntroRemovalOptions(args, iii, options);
-                        break;
-                    case "-f":
-                    case "-file":
-                        options.SingleFileMode = true;
-                        iii++;
-                        if (args.Length <= iii)
-                            break;
-                        options.SingleFileName = args[iii];
                         break;
                     case "-m":
                     case "-multi":

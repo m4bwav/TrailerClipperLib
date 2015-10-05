@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using MediaToolkit;
-using MediaToolkit.Model;
-using MediaToolkit.Options;
+using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace TrailerClipperLib
 {
     /// <summary>
-    ///     Batch clips the trailers from video files
+    ///     Batch clips the trailers from video and audio files
     /// </summary>
     public interface ITrailerClipperService
     {
         void RemoveTrailers(TrailerClipperOptions options);
+        void RemoveTrailers(IEnumerable<TrailerClipperOptions> options, string configFileOutputPath = null);
+        void RemoveTrailers(IEnumerable<TrailerClipperOptions> options, bool saveOptionsToFile = false);
+        void RemoveTrailers(string path, decimal trailerLenghtInMilliseconds);
+        void RemoveTrailersWithOptionsFile(string pathToOptionsFile = null);
+        void RemoveIntros(string path, decimal introLenghtInMilliseconds);
+        void RemoveIntrosAndTrailers(string path, decimal introLenghtInMilliseconds, decimal trailerLenghtInMilliseconds);
     }
 
     /// <summary>
-    ///     Batch clips the trailers from video files
+    ///     Batch clips the trailers from video and audio files
     /// </summary>
     public class TrailerClipper : ITrailerClipperService
     {
-        private const string DefaultOutputDirectory = @"\clipped";
-        private readonly ICollection<string> _validFileExtensions = new[] {"mp4", "flv", "avi", "mpg"};
+        private const string DefaultTrailerClipperOptionFileName = "TrailerClipperConfig.json";
+        private readonly TrailerClipperManager _manager = new TrailerClipperManager();
+        private readonly JavaScriptSerializer _serializer = new JavaScriptSerializer();
 
         /// <summary>
         ///     Execute the removal of trailers and/or intros as specificed in the options
@@ -30,137 +35,132 @@ namespace TrailerClipperLib
         /// <param name="options">Contains the various clipping options and target paths.  Cannot be null</param>
         public void RemoveTrailers(TrailerClipperOptions options)
         {
+            CheckIfOptionsAreNotNull(options);
+
+            var optionList = new[] {options};
+
+            RemoveTrailers(optionList, false);
+        }
+
+        /// <summary>
+        ///     Execute the removal of trailers and/or intros as specificed in the options
+        /// </summary>
+        /// <param name="options">Contains the various clipping options and target paths.  Cannot be null</param>
+        /// <param name="saveOptionsToFile">
+        ///     If true, then the clipper will the config settings so that they don't have to be typed
+        ///     in again, next time.
+        /// </param>
+        public void RemoveTrailers(IEnumerable<TrailerClipperOptions> options, bool saveOptionsToFile = false)
+        {
+            var outputPath = saveOptionsToFile
+                ? DefaultTrailerClipperOptionFileName
+                : null;
+
+            RemoveTrailers(options, outputPath);
+        }
+
+        /// <summary>
+        ///     Execute the removal of trailers and/or intros as specificed in the options
+        /// </summary>
+        /// <param name="options">Contains the various clipping options and target paths.  Cannot be null</param>
+        /// <param name="configFileOutputPath"></param>
+        public void RemoveTrailers(IEnumerable<TrailerClipperOptions> options, string configFileOutputPath = null)
+        {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
 
-            if (options.SingleFileMode)
-                ExecuteSingleFileMode(options);
-            else
-                ExecuteDirectoryMode(options);
+            var queryAbleOptions = options.AsQueryable();
+
+            BeginClipping(queryAbleOptions);
+
+            if (!string.IsNullOrWhiteSpace(configFileOutputPath))
+                SerializeOptionsToFile(queryAbleOptions, configFileOutputPath);
         }
 
-        private void ExecuteSingleFileMode(TrailerClipperOptions options)
+        public void RemoveTrailers(string directoryPath, decimal milliseconds)
         {
-            var singleFile = options.SingleFileName;
+            var options = new TrailerClipperOptions(directoryPath, milliseconds);
 
-            if (string.IsNullOrWhiteSpace(singleFile))
-                throw new ArgumentOutOfRangeException(nameof(options), " file name: " + singleFile + " is invalid.");
-
-
-            RemoveTrailerFromFile(singleFile, options);
+            RemoveTrailers(options);
         }
 
-        private void ExecuteDirectoryMode(TrailerClipperOptions options)
+        public void RemoveTrailersWithOptionsFile(string pathToOptionsFile = null)
         {
-            var directoryPath = options.InputDirectoryPath;
+            pathToOptionsFile = pathToOptionsFile ?? DefaultTrailerClipperOptionFileName;
 
-            var files = Directory.GetFiles(directoryPath);
+            if (!File.Exists(pathToOptionsFile))
+                throw new InvalidOperationException("Cannot find config file: " + pathToOptionsFile);
 
-            if (options.MultiTaskFiles)
-                Parallel.ForEach(files, filePath => RemoveTrailerFromFile(filePath, options));
-            else
-                foreach (var filePath in files)
-                    RemoveTrailerFromFile(filePath, options);
+            var text = File.ReadAllText(pathToOptionsFile);
+
+            var options = _serializer.Deserialize<IEnumerable<TrailerClipperOptions>>(text);
+
+            BeginClipping(options);
         }
 
-        private void RemoveTrailerFromFile(string filePath, TrailerClipperOptions options)
+        public void RemoveIntros(string path, decimal introLenghtInMilliseconds)
         {
-            if (!options.ProcessEveryFile && IsNotAValidMediaFile(filePath))
-                return;
+            CheckPathForValidity(path);
 
-            var durationInMilliseconds = GetDurationOfMediaFile(filePath);
 
-            var newDuration = durationInMilliseconds - options.TrailerLengthInMilliSeconds;
+            if (introLenghtInMilliseconds < 0)
+                throw new ArgumentOutOfRangeException(nameof(introLenghtInMilliseconds), "Intro length must be greater than zero, otherwise there is nothing to clip");
 
-            if (options.OutputToConsole)
-                Console.WriteLine("Starting on file: " + filePath);
-
-            TrimFileToNewDuration(filePath, newDuration, options);
-        }
-
-        private static void TrimFileToNewDuration(string inputFilePath, decimal newDurationInMilliseconds, TrailerClipperOptions clipperOptions)
-        {
-            var outputFilePath = ComputeOutputFilePath(inputFilePath, clipperOptions.OutputDirectoryPath);
-
-            var inputFile = new MediaFile {Filename = inputFilePath};
-
-            var outputFile = new MediaFile {Filename = outputFilePath};
-
-            var options = InitializeClippingData(newDurationInMilliseconds, clipperOptions);
-
-            using (var engine = new Engine())
+            var options = new TrailerClipperOptions(path)
             {
-                engine.GetMetadata(inputFile);
+                RemoveIntro = true,
+                IntroLengthInMilliseconds = introLenghtInMilliseconds
+            };
 
-                engine.Convert(inputFile, outputFile, options);
+
+            RemoveTrailers(options);
+        }
+
+        public void RemoveIntrosAndTrailers(string path, decimal introLenghtInMilliseconds, decimal trailerLenghtInMilliseconds)
+        {
+            CheckPathForValidity(path);
+
+            var options = new TrailerClipperOptions(path)
+            {
+                RemoveIntro = true,
+                IntroLengthInMilliseconds = introLenghtInMilliseconds,
+                TrailerLengthInMilliSeconds = trailerLenghtInMilliseconds
+            };
+
+            RemoveTrailers(options);
+        }
+
+        private static void CheckIfOptionsAreNotNull(TrailerClipperOptions options)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+        }
+
+        private void SerializeOptionsToFile(IEnumerable<TrailerClipperOptions> options, string outputFilePath)
+        {
+            var json = _serializer.Serialize(options);
+
+            File.WriteAllText(outputFilePath, json);
+        }
+
+        private void BeginClipping(IEnumerable<TrailerClipperOptions> options)
+        {
+            foreach (var batchOptions in options)
+            {
+                if (batchOptions.IsInputPathADirectory)
+                    _manager.ExecuteDirectoryMode(batchOptions);
+                else
+                    _manager.ExecuteSingleFileMode(batchOptions);
             }
-
-            if (clipperOptions.OutputToConsole)
-                Console.WriteLine("Finished on trimming file, output: " + outputFilePath);
         }
 
-        private static string ComputeOutputFilePath(string inputFilePath, string outputDirectoryPath)
+        private static void CheckPathForValidity(string path)
         {
-            var inputFileInfo = new FileInfo(inputFilePath);
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentOutOfRangeException(nameof(path));
 
-            var outputFileName = inputFileInfo.Name;
-
-            if (string.IsNullOrWhiteSpace(outputDirectoryPath))
-                outputDirectoryPath = inputFileInfo.DirectoryName + DefaultOutputDirectory;
-
-            if (!Directory.Exists(outputDirectoryPath))
-                Directory.CreateDirectory(outputDirectoryPath);
-
-            return outputDirectoryPath + @"\" + outputFileName;
-        }
-
-        private static ConversionOptions InitializeClippingData(decimal newDurationInMilliseconds, TrailerClipperOptions clipperOptions)
-        {
-            var options = new ConversionOptions();
-
-            var newDuration = Convert.ToDouble(newDurationInMilliseconds);
-
-            var newDurationTimeSpan = TimeSpan.FromMilliseconds(newDuration);
-
-            var seekToPosition = TimeSpan.Zero;
-
-            if (clipperOptions.RemoveIntro)
-                seekToPosition = TimeSpan.FromMilliseconds(Convert.ToDouble(clipperOptions.IntroLengthInMilliseconds));
-
-            var lengthSpan = newDurationTimeSpan.Subtract(seekToPosition);
-
-            options.CutMedia(seekToPosition, lengthSpan);
-
-            return options;
-        }
-
-        private static decimal GetDurationOfMediaFile(string filePath)
-        {
-            var inputFile = new MediaFile {Filename = filePath};
-
-            using (var engine = new Engine())
-                engine.GetMetadata(inputFile);
-
-            var durationOfMediaFile = inputFile.Metadata.Duration.TotalMilliseconds;
-
-            return Convert.ToDecimal(durationOfMediaFile);
-        }
-
-        private bool IsNotAValidMediaFile(string file)
-        {
-            var fileObj = new FileInfo(file);
-
-            var fileExtension = fileObj.Extension;
-
-            if (string.IsNullOrWhiteSpace(fileExtension))
-                return true;
-
-            var extension = fileExtension
-                .Trim()
-                .ToLower()
-                .Substring(1); //remove leading period
-
-            return !_validFileExtensions.Contains(extension);
+            if (!Directory.Exists(path) && File.Exists(path))
+                throw new ArgumentOutOfRangeException(path, "File or directory at: " + path + " does not exist, nothing to clip.");
         }
     }
 }
