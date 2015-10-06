@@ -96,6 +96,9 @@ namespace TrailerClipperLib
 
                 switch (currentArg)
                 {
+                    case "-d":
+                        options.DeleteOriginalFiles = true;
+                        break;
                     case "-i":
                     case "-intro":
                         options.RemoveIntro = true;

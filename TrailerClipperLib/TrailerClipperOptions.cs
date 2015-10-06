@@ -56,6 +56,7 @@ namespace TrailerClipperLib
         ///     This can be used with or without the trailer clipping functionality
         /// </summary>
         public bool RemoveIntro { get; set; }
+        public bool DeleteOriginalFiles { get; set; }
 
         /// <summary>
         ///     When 'RemoveIntro' is set to the true, this is the lenght in milliseconds of the intro to remove from the front of

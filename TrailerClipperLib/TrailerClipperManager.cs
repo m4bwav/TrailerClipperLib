@@ -20,7 +20,6 @@ namespace TrailerClipperLib
             if (string.IsNullOrWhiteSpace(singleFile))
                 throw new ArgumentOutOfRangeException(nameof(options), " file name: " + singleFile + " is invalid.");
 
-
             RemoveTrailerFromSingleFile(singleFile, options);
         }
 
@@ -50,6 +49,9 @@ namespace TrailerClipperLib
                 Console.WriteLine("Starting on file: " + filePath);
 
             TrimFileToNewDuration(filePath, newDuration, options);
+            
+            if(options.DeleteOriginalFiles)
+                File.Delete(filePath);
         }
 
         private static void TrimFileToNewDuration(string inputFilePath, decimal newDurationInMilliseconds, TrailerClipperOptions clipperOptions)
