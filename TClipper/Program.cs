@@ -6,25 +6,24 @@ namespace TClipper
     internal class Program
     {
         private static readonly TrailerClipper Clipper = new TrailerClipper();
-        private static readonly TcHelpReader _helpReader = new TcHelpReader();
+        private static readonly TcHelpReader HelpReader = new TcHelpReader();
+        private static readonly ClipperCommandLineInterpreter CommandProcessor = new ClipperCommandLineInterpreter();
 
         private static void Main(string[] args)
         {
             if (args == null || args.Length < 1)
                 Clipper.RemoveTrailersWithOptionsFile();
 
-            var commandProcessor = new ClipperCommandLineInterpreter();
-
-            if (commandProcessor.ShouldDisplayHelp(args))
+            if (CommandProcessor.ShouldDisplayHelp(args))
             {
-                var helpFile = _helpReader.ReadHelpFileText();
+                var helpFile = HelpReader.ReadHelpFileText();
 
                 Console.Write(helpFile);
 
                 return;
             }
 
-            var configPath = commandProcessor.ReadConfigFilePath(args);
+            var configPath = CommandProcessor.ReadConfigFilePath(args);
 
             if (!string.IsNullOrWhiteSpace(configPath))
             {
@@ -32,14 +31,14 @@ namespace TClipper
                 return;
             }
 
-            var options = commandProcessor.ParseCommandLineArgs(args);
+            var options = CommandProcessor.ParseCommandLineArgs(args);
 
             if (options == null)
                 return;
 
-            if (commandProcessor.ShouldDumpConfigFile(args))
+            if (CommandProcessor.ShouldDumpConfigFile(args))
             {
-                var configOutputPath = commandProcessor.ReadConfigOutputPath(args);
+                var configOutputPath = CommandProcessor.ReadConfigOutputPath(args);
 
                 Clipper.RemoveTrailers(new[] {options}, configOutputPath);
             }
