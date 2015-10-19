@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClipperCommandLineInterpreter.cs" />
+    <Compile Include="TCHelpReader.cs" />
     <Compile Include="TrailerClipper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrailerClipperManager.cs" />
@@ -54,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="help.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

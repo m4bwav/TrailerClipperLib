@@ -1,10 +1,12 @@
-﻿using TrailerClipperLib;
+﻿using System;
+using TrailerClipperLib;
 
 namespace TClipper
 {
     internal class Program
     {
         private static readonly TrailerClipper Clipper = new TrailerClipper();
+        private static readonly TcHelpReader _helpReader = new TcHelpReader();
 
         private static void Main(string[] args)
         {
@@ -12,6 +14,15 @@ namespace TClipper
                 Clipper.RemoveTrailersWithOptionsFile();
 
             var commandProcessor = new ClipperCommandLineInterpreter();
+
+            if (commandProcessor.ShouldDisplayHelp(args))
+            {
+                var helpFile = _helpReader.ReadHelpFileText();
+
+                Console.Write(helpFile);
+
+                return;
+            }
 
             var configPath = commandProcessor.ReadConfigFilePath(args);
 

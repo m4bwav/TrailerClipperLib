@@ -86,7 +86,13 @@ namespace TrailerClipperLib
 
         public void RemoveTrailersWithOptionsFile(string pathToOptionsFile = null)
         {
-            pathToOptionsFile = pathToOptionsFile ?? DefaultTrailerClipperOptionFileName;
+            if (pathToOptionsFile == null)
+            {
+                if (!File.Exists(DefaultTrailerClipperOptionFileName))
+                    throw new InvalidOperationException("No parameters and no config file available");
+
+                pathToOptionsFile = DefaultTrailerClipperOptionFileName;
+            }
 
             if (!File.Exists(pathToOptionsFile))
                 throw new InvalidOperationException("Cannot find config file: " + pathToOptionsFile);

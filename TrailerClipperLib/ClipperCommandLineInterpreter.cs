@@ -154,5 +154,10 @@ namespace TrailerClipperLib
 
             return args[index + 1];
         }
+
+        public bool ShouldDisplayHelp(string[] args)
+        {
+            return args.Any(x => x.Trim().ToLower() == "-h" || x.Trim().ToLower() == "-help");
+        }
     }
 }
