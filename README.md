@@ -1,6 +1,5 @@
 # TrailerClipperLib
 A library and console app for batch removing trailers from video files.  
-This library and console app uses nuget package for project MediaToolKit: https://github.com/AydinAdn/MediaToolkit
 
 Standard Usage - Remove trailer:   
 TClipper &lt;path> &lt;trailer_length_in_milliseconds>   
@@ -17,5 +16,6 @@ Options:
 -a, -allfiles - Process files that don't have a valid file extension as well as those that do.  Off by default  
 
 
+This library and console app uses nuget package for project MediaToolKit: https://github.com/AydinAdn/MediaToolkit  
 "MediaToolkit is licensed under the [MIT license](https://github.com/AydinAdn/MediaToolkit/blob/master/LICENSE.md)  
 MediaToolkit uses [FFmpeg](http://ffmpeg.org), a multimedia framework which is licensed under the [LGPLv2.1 license](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html), its source can be downloaded from [here](https://github.com/AydinAdn/MediaToolkit/tree/master/FFMpeg%20src)"
