@@ -2,15 +2,15 @@
 A library and console app for batch removing trailers from video files.  
 This library and console app uses nuget package for project MediaToolKit: https://github.com/AydinAdn/MediaToolkit
 
-Standard Usage - Remove trailer:
-TClipper <path> <trailer_length_in_milliseconds>
-<path> can be a single file or a directory
+Standard Usage - Remove trailer:   
+TClipper &lt;path> &lt;trailer_length_in_milliseconds>   
+&lt;path> can be a single file or a directory   
 
 Options:  
 ﻿-h - Displays this help  
--o <output_filename> - outputs the configuration of the clipping to file, so that the configuration can be used again.  
--c, -config <config_filepath> - reads the clipping parameters from a file, rather than from the command-line   
--i, -intro <intro_length_in_milliseconds> - This options allows you to trim an intro rather than a trailer.  Can be used  with or without the trailer trimming functionality  
+-o &lt;output_filename> - outputs the configuration of the clipping to file, so that the configuration can be used again.  
+-c, -config &lt;config_filepath> - reads the clipping parameters from a file, rather than from the command-line   
+-i, -intro &lt;intro_length_in_milliseconds> - This options allows you to trim an intro rather than a trailer.  Can be used  with or without the trailer trimming functionality  
 -cf, -consoleoff - Turns off logging output to console  
 -d - delete the original files that are trimmed, off by default  
 -m, -multi - Use multi-tasking, experimental, generally does not increase the speed of the trimming, but may show slight improvement  
