@@ -140,7 +140,7 @@ namespace TrailerClipperLib
 
         public bool ShouldDumpConfigFile(string[] args)
         {
-            return args.Any(x => x.Trim().ToLower() == "-d" || x.Trim().ToLower() == "-o");
+            return args.Any(x => x.Trim().ToLower() == "-o");
         }
 
         public string ReadConfigOutputPath(string[] args)
