@@ -26,6 +26,17 @@ namespace TrailerClipperLib
     public class TrailerClipper : ITrailerClipperService
     {
         private const string DefaultTrailerClipperOptionFileName = "TrailerClipperConfig.json";
+
+        private static readonly TrailerClipperOptions DefaultConfig = new TrailerClipperOptions
+        {
+            RemoveIntro = true,
+            IntroLengthInMilliseconds = 3 * 1000 + 500,
+            TrailerLengthInMilliSeconds = 17 * 1000 + 500,
+            OutputDirectoryPath = "Clipped",
+            DeleteOriginalFiles = false,
+            InputPath = "Original"
+        };
+
         private readonly TrailerClipperManager _manager = new TrailerClipperManager();
         private readonly JavaScriptSerializer _serializer = new JavaScriptSerializer();
 
@@ -89,7 +100,10 @@ namespace TrailerClipperLib
             if (pathToOptionsFile == null)
             {
                 if (!File.Exists(DefaultTrailerClipperOptionFileName))
-                    throw new InvalidOperationException("No parameters and no config file available");
+                {
+                    Console.WriteLine("No parameters and no config file available, use -h for help");
+                    return;
+                }
 
                 pathToOptionsFile = DefaultTrailerClipperOptionFileName;
             }
@@ -152,12 +166,10 @@ namespace TrailerClipperLib
         private void BeginClipping(IEnumerable<TrailerClipperOptions> options)
         {
             foreach (var batchOptions in options)
-            {
                 if (batchOptions.IsInputPathADirectory)
                     _manager.ExecuteDirectoryMode(batchOptions);
                 else
                     _manager.ExecuteSingleFileMode(batchOptions);
-            }
         }
 
         private static void CheckPathForValidity(string path)
@@ -167,6 +179,20 @@ namespace TrailerClipperLib
 
             if (!Directory.Exists(path) && File.Exists(path))
                 throw new ArgumentOutOfRangeException(path, "File or directory at: " + path + " does not exist, nothing to clip.");
+        }
+
+        public void CreateDefaultSampleConfig()
+        {
+            if (File.Exists(DefaultTrailerClipperOptionFileName))
+            {
+                Console.WriteLine("Cannot create a sample config file because a file with the name: "
+                                  + DefaultTrailerClipperOptionFileName + ", already exists");
+                return;
+            }
+
+            var json = _serializer.Serialize(new [] {DefaultConfig});
+
+            File.WriteAllText(DefaultTrailerClipperOptionFileName, json);
         }
     }
 }

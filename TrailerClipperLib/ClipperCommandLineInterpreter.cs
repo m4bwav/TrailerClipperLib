@@ -24,12 +24,15 @@ namespace TrailerClipperLib
         /// <returns>Valid clipper options or null if there was an issue</returns>
         public TrailerClipperOptions ParseCommandLineArgs(string[] args)
         {
-            if (args == null || args.Length < 2)
+            if (args == null || (args.Length == 1 && args[0] != "-z"))
             {
                 const string errorMessage = "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'";
                 Console.WriteLine(errorMessage);
                 return null;
             }
+
+            if (args.Length == 1 && args[0] == "-z")
+                return null;
 
             var argsLength = args.Length;
 
@@ -158,6 +161,11 @@ namespace TrailerClipperLib
         public bool ShouldDisplayHelp(string[] args)
         {
             return args.Any(x => x.Trim().ToLower() == "-h" || x.Trim().ToLower() == "-help");
+        }
+
+        public bool ShouldCreateDefaultSampleConfig(string[] args)
+        {
+            return args.Any(x => x.Trim().ToLower() == "-z");
         }
     }
 }

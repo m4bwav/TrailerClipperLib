@@ -12,7 +12,10 @@ namespace TClipper
         private static void Main(string[] args)
         {
             if (args == null || args.Length < 1)
+            {
                 Clipper.RemoveTrailersWithOptionsFile();
+                return;
+            }
 
             if (CommandProcessor.ShouldDisplayHelp(args))
             {
@@ -23,6 +26,9 @@ namespace TClipper
                 return;
             }
 
+            if (CommandProcessor.ShouldCreateDefaultSampleConfig(args))
+                Clipper.CreateDefaultSampleConfig();
+            
             var configPath = CommandProcessor.ReadConfigFilePath(args);
 
             if (!string.IsNullOrWhiteSpace(configPath))

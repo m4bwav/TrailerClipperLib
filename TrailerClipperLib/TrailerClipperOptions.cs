@@ -81,6 +81,9 @@ namespace TrailerClipperLib
         {
             get
             {
+                if (!File.Exists(InputPath) && !Directory.Exists(InputPath))
+                    return false;
+
                 var attr = File.GetAttributes(InputPath);
 
                 return attr.HasFlag(FileAttributes.Directory);

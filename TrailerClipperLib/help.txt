@@ -6,6 +6,7 @@
 -d - delete the original files that are trimmed, off by default
 -m, -multi - Use multi-tasking, experimental, generally does not increase the speed of the trimming, but may show slight improvement
 -a, -allfiles - Process files that don't have a valid file extension as well as those that do.  Off by default
+-z - To create a default configuration file if desired
 
 Standard Usage - Remove trailer:
 TClipper <path> <trailer_length_in_milliseconds>

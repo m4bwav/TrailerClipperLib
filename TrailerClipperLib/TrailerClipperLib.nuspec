@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TrailerClipper</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <title>TrailerClipper</title>
     <authors>Mark Rogers</authors>
     <owners>Mark Rogers</owners>
@@ -12,8 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Batch trailer and intro video/audio clipper.</summary>
     <description>Batch trailer and intro video/audio clipper.</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <releaseNotes>Added a -z option to allow for creating a default config file.</releaseNotes>
+    <copyright>Copyright 2015-2017</copyright>
     <tags>Video Audio mp4 clipper trailer</tags>
   </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="lib" />
+  </files>
 </package>
