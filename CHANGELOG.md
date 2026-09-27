@@ -4,7 +4,7 @@ All notable changes to TrailerClipper and TrailerClipper.Tool. The format follow
 
 ## [Unreleased]
 
-## [2.0.0-beta.1]
+## [2.0.0] - 2026-09-27
 
 **Compatibility promise.** 2.0.0 gives the same results as 1.1.0 for every call recorded from the published 1.1.0 (148 cases in `tests/Golden/1.1.0.json`: return values, exceptions, console lines, config files and the length of every clipped file), except the differences listed under Changed and Fixed (E1 to E11). The namespace `TrailerClipperLib` and every public type, method and parameter name stay as they were, including the parameter names `trailerLenghtInMilliseconds` and `introLenghtInMilliseconds`.
 
@@ -41,10 +41,15 @@ All notable changes to TrailerClipper and TrailerClipper.Tool. The format follow
 
 - The Visual Studio 2015 solution, `packages.config`, the `.nuspec` and the 1.0.x packages that were committed to the repository.
 
+## [2.0.0-beta.1] - 2026-09-27
+
+The release rehearsal of 2.0.0, with the same changes.
+
 ## [1.1.0] - 2016-09-29
 
 - Added a `-z` option to create a default config file.
 
-[Unreleased]: https://github.com/m4bwav/TrailerClipperLib/compare/v2.0.0-beta.1...HEAD
+[Unreleased]: https://github.com/m4bwav/TrailerClipperLib/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/m4bwav/TrailerClipperLib/releases/tag/v2.0.0
 [2.0.0-beta.1]: https://github.com/m4bwav/TrailerClipperLib/releases/tag/v2.0.0-beta.1
 [1.1.0]: https://www.nuget.org/packages/TrailerClipper/1.1.0
