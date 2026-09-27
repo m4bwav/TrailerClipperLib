@@ -24,3 +24,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - actionlint 1.7.12, check-workflow-shell.py and zizmor 1.30.1 --offline: clean.
 ## [2026-09-27] index | rebuilt (4 entries)
 ## [2026-09-27] index | rebuilt (5 entries)
+
+## [2026-09-27] add | CI round 1 and Phase 3 review
+- PR #1 opened. CI run 36334471273: Windows green; macOS failed on file order (APFS lists b.mp3 before a.wav) and the /private temp prefix; Ubuntu failed because apt's ffmpeg 6.1 ffprobe measures the untouched MP3 fixture as 10 031 ms. Fixes in 127f399: folders clipped in name order on every OS, the golden test uses the resolved temp path, CI installs the current ffmpeg 9.0 build from BtbN/FFmpeg-Builds (latest release, sha256 checked).
+- nuget environment created with gh: required reviewer m4bwav, deployment rule tag v*, secret NUGET_USER.
+- Phase 3 review (read-only subagent, 18 tool calls, 4 minutes): 12 findings, all fixed or named (E11); see notes/2026-09-27-phase-3-review-findings.md. PublicApi-1.1.0.txt listed from the published DLL by reflection (PowerShell: Assembly.LoadFile, GetExportedTypes, public declared methods, constructors and properties with parameter names). 193 tests per framework, green on net10.0 and net48. Committed as d033b12.
+- The Write and Edit tools decode backslash-u escapes (backslash, u, four hex digits) in their input: a C# escape for "<" became a literal "<" three times, which silently disabled the config escaping. Write such text with Python and chr(92), then grep the file.
