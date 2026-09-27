@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TClipper</RootNamespace>
+    <AssemblyName>tclipper</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>tclipper</ToolCommandName>
+    <RollForward>Major</RollForward>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <PackageId>TrailerClipper.Tool</PackageId>
+    <Version>2.0.0-beta.1</Version>
+    <Authors>Mark Rogers</Authors>
+    <Copyright>Copyright (c) 2015-2026 Mark Rogers</Copyright>
+    <Title>tclipper</Title>
+    <Description>The tclipper command: batch removal of intros and trailers from video and audio files through ffmpeg. 'tclipper --install-ffmpeg' installs ffmpeg with winget, Homebrew, apt or dnf.</Description>
+    <PackageTags>video audio mp4 mp3 ffmpeg clipper trailer intro trim dotnet-tool</PackageTags>
+    <PackageProjectUrl>https://github.com/m4bwav/TrailerClipperLib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/m4bwav/TrailerClipperLib</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See https://github.com/m4bwav/TrailerClipperLib/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../TrailerClipperLib/TrailerClipperLib.csproj" />
+  </ItemGroup>
+
+</Project>

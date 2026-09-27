@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <RootNamespace>TrailerClipperLib</RootNamespace>
+    <AssemblyName>TrailerClipperLib</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <PackageId>TrailerClipper</PackageId>
+    <Version>2.0.0-beta.1</Version>
+    <Authors>Mark Rogers</Authors>
+    <Copyright>Copyright (c) 2015-2026 Mark Rogers</Copyright>
+    <Title>TrailerClipper</Title>
+    <Description>Batch removal of intros and trailers from video and audio files, through ffmpeg. Finds an installed ffmpeg on Windows, macOS and Linux; the TrailerClipper.Tool package adds the tclipper command, which can install ffmpeg for you.</Description>
+    <PackageTags>video audio mp4 mp3 ffmpeg clipper trailer intro trim</PackageTags>
+    <PackageProjectUrl>https://github.com/m4bwav/TrailerClipperLib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/m4bwav/TrailerClipperLib</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See https://github.com/m4bwav/TrailerClipperLib/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <!-- The help text keeps 1.1.0's bytes (BOM, CRLF); .gitattributes marks it -text. -->
+    <EmbeddedResource Include="help.txt" LogicalName="TrailerClipperLib.help.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FFMpegCore" Version="5.5.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TrailerClipperLib.Tests" />
+  </ItemGroup>
+
+</Project>

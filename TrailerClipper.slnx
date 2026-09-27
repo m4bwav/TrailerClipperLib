@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TrailerClipper.Tool/TrailerClipper.Tool.csproj" />
+    <Project Path="src/TrailerClipperLib/TrailerClipperLib.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TrailerClipperLib.Tests/TrailerClipperLib.Tests.csproj" />
+  </Folder>
+</Solution>

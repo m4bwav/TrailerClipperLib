@@ -1,0 +1,130 @@
+# Every push to master and every pull request: locked restore, format check, build with analyzers as errors, the golden
+# and unit tests on Linux, macOS and Windows (net10.0 everywhere; net48 on Windows, which runs the netstandard2.0 build),
+# a pack of both packages with a content check and a tclipper smoke test from the packed tool, and the final `ci` job the
+# ruleset on master requires. Publishing is release.yml. Actions are pinned to commit SHAs; Dependabot updates them.
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # Source Link records the commit
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      # The golden test clips real WAV and MP3 files, so every runner needs ffmpeg and ffprobe.
+      # Ubuntu's apt ffmpeg is 6.1 (2023), whose ffprobe measures MP3 files differently from current builds; take the
+      # current 9.0 line from BtbN/FFmpeg-Builds and check it against that release's checksums.
+      - name: Install ffmpeg 9.0 (Linux)
+        if: runner.os == 'Linux'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP"
+          gh release download latest -R BtbN/FFmpeg-Builds -p 'ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz' -p checksums.sha256
+          grep ' ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz$' checksums.sha256 | sha256sum -c -
+          tar -xf ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz
+          echo "$RUNNER_TEMP/ffmpeg-n9.0-latest-linux64-gpl-9.0/bin" >> "$GITHUB_PATH"
+      - name: Install ffmpeg (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
+      - name: Install ffmpeg (Windows)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
+      - name: ffmpeg version
+        run: ffmpeg -hide_banner -version | head -1
+      - run: dotnet restore --locked-mode
+      - run: dotnet format --no-restore --verify-no-changes
+      - run: dotnet build --no-restore -c Release
+      # A dedicated restore that fails on any audit finding, so a future advisory blocks a merge but not a local build.
+      - name: NuGet audit as errors
+        run: dotnet restore -p:AuditPipeline=true --force
+      - name: Test (net10.0)
+        run: dotnet test --no-build -c Release -f net10.0 --logger trx --results-directory TestResults
+      - name: Test (net48, Windows only; exercises the netstandard2.0 build)
+        if: runner.os == 'Windows'
+        run: dotnet test --no-build -c Release -f net48 --logger trx --results-directory TestResults
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: test-results-${{ matrix.os }}
+          path: TestResults
+          retention-days: 30
+      - name: Pack both packages
+        run: dotnet pack --no-build -c Release -o artifacts
+      - name: The library package holds exactly what it should
+        if: runner.os == 'Linux'
+        run: |
+          expected=$'README.md\nTrailerClipper.nuspec\nlib/net10.0/TrailerClipperLib.dll\nlib/net10.0/TrailerClipperLib.xml\nlib/netstandard2.0/TrailerClipperLib.dll\nlib/netstandard2.0/TrailerClipperLib.xml'
+          actual=$(unzip -Z1 artifacts/TrailerClipper.[0-9]*.nupkg | grep -Ev '^(_rels/|package/|\[Content_Types\])' | sort)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::unexpected package contents"
+            diff <(echo "$expected") <(echo "$actual")
+            exit 1
+          fi
+      - name: tclipper from the packed tool clips a file
+        run: |
+          version=$(ls artifacts/TrailerClipper.Tool.*.nupkg | sed -E 's/.*TrailerClipper\.Tool\.(.*)\.nupkg/\1/')
+          dotnet tool install TrailerClipper.Tool --version "$version" --add-source artifacts --tool-path "$RUNNER_TEMP/tool"
+          mkdir -p "$RUNNER_TEMP/smoke/media"
+          cp tests/Golden/fixtures/a.wav "$RUNNER_TEMP/smoke/media/"
+          cd "$RUNNER_TEMP/smoke"
+          "$RUNNER_TEMP/tool/tclipper" -h | grep -q 'Standard Usage'
+          "$RUNNER_TEMP/tool/tclipper" -i 1000 media 2000
+          test -s media/clipped/a.wav
+          if "$RUNNER_TEMP/tool/tclipper" nowhere 2000; then
+            echo "::error::a missing path must exit 1"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: runner.os == 'Linux'
+        with:
+          name: packages
+          path: artifacts/*nupkg
+          retention-days: 30
+
+  ci:
+    name: ci
+    if: ${{ always() }}
+    needs: [build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Every job passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "job results: $RESULTS"
+          for result in $RESULTS; do
+            if [ "$result" != success ]; then
+              exit 1
+            fi
+          done
