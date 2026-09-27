@@ -56,11 +56,14 @@ jobs:
       - name: Install ffmpeg (Windows)
         if: runner.os == 'Windows'
         run: choco install ffmpeg -y --no-progress
-      - name: nuget.org lists both packages (the index can lag about 15 to 25 minutes)
+      - name: nuget.org lists both packages in both indexes (they can lag about 15 to 25 minutes)
         run: |
           for id in trailerclipper trailerclipper.tool; do
             for attempt in $(seq 1 40); do
-              if curl -fsS "https://api.nuget.org/v3-flatcontainer/$id/index.json" | grep -q "\"$VERSION\""; then
+              # Both indexes: the flat container (downloads) updates first; the registration index, which
+              # dotnet tool install reads, lagged it by minutes on 2026-09-27.
+              if curl -fsS "https://api.nuget.org/v3-flatcontainer/$id/index.json" | grep -q "\"$VERSION\"" \
+                && curl -fsS --compressed "https://api.nuget.org/v3/registration5-gz-semver2/$id/index.json" | grep -q "\"version\":\"$VERSION\""; then
                 echo "$id $VERSION listed"
                 continue 2
               fi
