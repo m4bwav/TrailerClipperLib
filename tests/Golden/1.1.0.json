@@ -1,0 +1,1969 @@
+{
+  "package": "TrailerClipper@1.1.0",
+  "runtime": ".NET Framework 4.8.9345.0",
+  "captured": "2026-09-27",
+  "ffprobe": "ffprobe version 9.0.1-full_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers",
+  "note": "Golden outputs of the published TrailerClipper 1.1.0 (bundles MediaToolkit 1.0.4.11 and its ffmpeg). See Capture/Program.cs.",
+  "cases": [
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": null,
+      "result": null,
+      "console": "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [],
+      "result": {
+        "$throws": "IndexOutOfRangeException: Index was outside the bounds of the array."
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-z"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media"
+      ],
+      "result": null,
+      "console": "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media/a.wav",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media/a.wav",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": false,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "2000.5"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000.5"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "2000,5"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "20005"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "-2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "abc"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, new duration in milliseconds: 'abc' cannot be parsed\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "missing",
+        "2000"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, input directory or file: 'missing' does not exist\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-d",
+        "-m",
+        "-cf",
+        "-a",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": true,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": true,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": false,
+        "ProcessEveryFile": true,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-D",
+        " -M ",
+        "-consoleoff",
+        "-allfiles",
+        "-multi",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": true,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": true,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": false,
+        "ProcessEveryFile": true,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-i",
+        "1500",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "1500",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": true,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-intro",
+        "1500",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "1500",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": true,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-i",
+        "1500",
+        "media"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, input directory or file: '1500' does not exist\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-i",
+        "1500"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, input directory or file: '-i' does not exist\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-i",
+        "abc",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "$throws": "ArgumentOutOfRangeException: Specified argument was out of the range of valid values.\nParameter name: args"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-i",
+        "0",
+        "media"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, new duration in milliseconds: 'media' cannot be parsed\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-o",
+        "cfg.json",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-x",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "en-US",
+      "args": [
+        "-z",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": null,
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentNullException: Value cannot be null.\nParameter name: source"
+      },
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentNullException: Value cannot be null.\nParameter name: source"
+      },
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentNullException: Value cannot be null.\nParameter name: source"
+      },
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentNullException: Value cannot be null.\nParameter name: source"
+      },
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "-c"
+      ],
+      "result": {
+        "$throws": "IndexOutOfRangeException: Index was outside the bounds of the array."
+      },
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "-c"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "-c"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "-c"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "-c"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "-c",
+        "cfg.json"
+      ],
+      "result": "cfg.json",
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "-c",
+        "cfg.json"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "-c",
+        "cfg.json"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "-c",
+        "cfg.json"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "-c",
+        "cfg.json"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        " -CONFIG ",
+        "x.json",
+        "more"
+      ],
+      "result": "x.json",
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        " -CONFIG ",
+        "x.json",
+        "more"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        " -CONFIG ",
+        "x.json",
+        "more"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        " -CONFIG ",
+        "x.json",
+        "more"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        " -CONFIG ",
+        "x.json",
+        "more"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-c",
+        "cfg.json"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-c",
+        "cfg.json"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-c",
+        "cfg.json"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-c",
+        "cfg.json"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-c",
+        "cfg.json"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "-o",
+        "out.json",
+        "media",
+        "2000"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "-o",
+        "out.json",
+        "media",
+        "2000"
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "-o",
+        "out.json",
+        "media",
+        "2000"
+      ],
+      "result": "out.json",
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "-o",
+        "out.json",
+        "media",
+        "2000"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "-o",
+        "out.json",
+        "media",
+        "2000"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-O",
+        "Out.JSON"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-O",
+        "Out.JSON"
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-O",
+        "Out.JSON"
+      ],
+      "result": "Out.JSON",
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-O",
+        "Out.JSON"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-O",
+        "Out.JSON"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "-o"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "-o"
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "-o"
+      ],
+      "result": {
+        "$throws": "IndexOutOfRangeException: Index was outside the bounds of the array."
+      },
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "-o"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "-o"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "-h"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "-h"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "-h"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "-h"
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "-h"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-HELP"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-HELP"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-HELP"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-HELP"
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "media",
+        "-HELP"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "--help"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "--help"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "--help"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "--help"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "--help"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        "-z"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        "-z"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        "-z"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        "-z"
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        "-z"
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigFilePath",
+      "culture": "en-US",
+      "args": [
+        " -Z "
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDumpConfigFile",
+      "culture": "en-US",
+      "args": [
+        " -Z "
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ReadConfigOutputPath",
+      "culture": "en-US",
+      "args": [
+        " -Z "
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ShouldDisplayHelp",
+      "culture": "en-US",
+      "args": [
+        " -Z "
+      ],
+      "result": false,
+      "console": ""
+    },
+    {
+      "method": "ShouldCreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": [
+        " -Z "
+      ],
+      "result": true,
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": null,
+      "result": null,
+      "console": "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [],
+      "result": {
+        "$throws": "IndexOutOfRangeException: Index was outside the bounds of the array."
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-z"
+      ],
+      "result": null,
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media"
+      ],
+      "result": null,
+      "console": "Incorrect parameters, try 'TClipper [<options>] <input_directory_path> <trailer_duration_in_milliseconds>'\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media/a.wav",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media/a.wav",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": false,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media",
+        "2000.5"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "20005"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media",
+        "2000,5"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000.5"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media",
+        "-2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "-2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media",
+        "abc"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, new duration in milliseconds: 'abc' cannot be parsed\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "missing",
+        "2000"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, input directory or file: 'missing' does not exist\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-d",
+        "-m",
+        "-cf",
+        "-a",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": true,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": true,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": false,
+        "ProcessEveryFile": true,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-D",
+        " -M ",
+        "-consoleoff",
+        "-allfiles",
+        "-multi",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": true,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": true,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": false,
+        "ProcessEveryFile": true,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-i",
+        "1500",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "1500",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": true,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-intro",
+        "1500",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "1500",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": true,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-i",
+        "1500",
+        "media"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, input directory or file: '1500' does not exist\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "media",
+        "-i",
+        "1500"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, input directory or file: '-i' does not exist\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-i",
+        "abc",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "$throws": "ArgumentOutOfRangeException: Specified argument was out of the range of valid values.\nParameter name: args"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-i",
+        "0",
+        "media"
+      ],
+      "result": null,
+      "console": "Incorrect parameter, new duration in milliseconds: 'media' cannot be parsed\n"
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-o",
+        "cfg.json",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-x",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "ParseCommandLineArgs",
+      "culture": "de-DE",
+      "args": [
+        "-z",
+        "media",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "new TrailerClipperOptions()",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": null,
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": false,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "0"
+      },
+      "console": ""
+    },
+    {
+      "method": "new TrailerClipperOptions(path)",
+      "culture": "en-US",
+      "args": [
+        "media"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": true,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "0"
+      },
+      "console": ""
+    },
+    {
+      "method": "new TrailerClipperOptions(path, ms)",
+      "culture": "en-US",
+      "args": [
+        "media/a.wav",
+        "2000"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "media/a.wav",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": false,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "2000"
+      },
+      "console": ""
+    },
+    {
+      "method": "new TrailerClipperOptions(null)",
+      "culture": "en-US",
+      "args": [
+        null
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": null,
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": false,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "0"
+      },
+      "console": ""
+    },
+    {
+      "method": "new TrailerClipperOptions(missing)",
+      "culture": "en-US",
+      "args": [
+        "missing"
+      ],
+      "result": {
+        "ClippingConfigOutputFilePath": null,
+        "DeleteOriginalFiles": false,
+        "InputPath": "missing",
+        "IntroLengthInMilliseconds": "0",
+        "IsInputPathADirectory": false,
+        "MultiTaskFiles": false,
+        "OutputClippingConfigToFile": false,
+        "OutputDirectoryPath": null,
+        "OutputToConsole": true,
+        "ProcessEveryFile": false,
+        "RemoveIntro": false,
+        "TrailerLengthInMilliSeconds": "0"
+      },
+      "console": ""
+    },
+    {
+      "method": "TcHelpReader.ReadHelpFileText",
+      "culture": "en-US",
+      "args": null,
+      "result": "-h - Displays this help\r\n-o <output_filename> - outputs the configuration of the clipping to file, so that the configuration can be used again.\r\n-c, -config <config_filepath> - reads the clipping parameters from a file, rather than from the command-line\r\n-i, -intro <intro_length_in_milliseconds> - This options allows you to trim an intro rather than a trailer.  Can be used with or without the trailer trimming functionality\r\n-cf, -consoleoff - Turns off logging output to console\r\n-d - delete the original files that are trimmed, off by default\r\n-m, -multi - Use multi-tasking, experimental, generally does not increase the speed of the trimming, but may show slight improvement\r\n-a, -allfiles - Process files that don't have a valid file extension as well as those that do.  Off by default\r\n-z - To create a default configuration file if desired\r\n\r\nStandard Usage - Remove trailer:\r\nTClipper <path> <trailer_length_in_milliseconds>\r\n<path> can be a single file or a directory\r\n\r\n\r\n",
+      "console": ""
+    },
+    {
+      "method": "RemoveTrailers(file, 2000)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/a.wav\nFinished on trimming file, output: <work>\\c120\\media\\clipped\\a.wav\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(file mp3, 2000)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/b.mp3\nFinished on trimming file, output: <work>\\c121\\media\\clipped\\b.mp3\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/b.mp3": 8033,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(dir, 2000)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c122\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c122\\media\\clipped\\b.mp3\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8000,
+        "media/clipped/b.mp3": 8033,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(dir, 0)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c123\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c123\\media\\clipped\\b.mp3\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 10000,
+        "media/clipped/b.mp3": 10044,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(dir, 2000.5)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c124\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c124\\media\\clipped\\b.mp3\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8000,
+        "media/clipped/b.mp3": 8033,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(file, 12000) longer than file",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/a.wav\nFinished on trimming file, output: <work>\\c125\\media\\clipped\\a.wav\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": "unreadable: <work>\\c125\\media\\clipped\\a.wav: Invalid data found when processing input",
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(file, -1000)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/a.wav\nFinished on trimming file, output: <work>\\c126\\media\\clipped\\a.wav\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(missing, 2000)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers((TrailerClipperOptions)null)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentNullException: Value cannot be null.\nParameter name: options"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers((IEnumerable)null, false)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentNullException: Value cannot be null.\nParameter name: options"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntros(file, 1500)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentOutOfRangeException: File or directory at: media/a.wav does not exist, nothing to clip.\nParameter name: media/a.wav"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntros(dir, 1500)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c131\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c131\\media\\clipped\\b.mp3\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8500,
+        "media/clipped/b.mp3": 8555,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntros(dir, -1)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentOutOfRangeException: Intro length must be greater than zero, otherwise there is nothing to clip\nParameter name: introLenghtInMilliseconds"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntros(empty, 1500)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentOutOfRangeException: Specified argument was out of the range of valid values.\nParameter name: path"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntros(missing, 1500)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntrosAndTrailers(dir, 1500, 2000)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c135\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c135\\media\\clipped\\b.mp3\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 6500,
+        "media/clipped/b.mp3": 6544,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveIntrosAndTrailers(file, 1500, 2000)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "ArgumentOutOfRangeException: File or directory at: media/a.wav does not exist, nothing to clip.\nParameter name: media/a.wav"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(options: out dir, delete originals)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: out\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: out\\b.mp3\n",
+      "files": {
+        "media/notes.txt": 9,
+        "out/a.wav": 8000,
+        "out/b.mp3": 8033
+      }
+    },
+    {
+      "method": "RemoveTrailers(options: ProcessEveryFile)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c138\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c138\\media\\clipped\\b.mp3\nStarting on file: media\\notes.txt\nFinished on trimming file, output: <work>\\c138\\media\\clipped\\notes.txt\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8000,
+        "media/clipped/b.mp3": 8033,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(options: MultiTaskFiles, console off)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8000,
+        "media/clipped/b.mp3": 8033,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(options, saveOptionsToFile true)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/a.wav\nFinished on trimming file, output: <work>\\c140\\media\\clipped\\a.wav\n",
+      "files": {
+        "TrailerClipperConfig.json": "[{\"OutputToConsole\":true,\"MultiTaskFiles\":false,\"OutputDirectoryPath\":null,\"ProcessEveryFile\":false,\"RemoveIntro\":false,\"DeleteOriginalFiles\":false,\"IntroLengthInMilliseconds\":0,\"InputPath\":\"media/a.wav\",\"TrailerLengthInMilliSeconds\":2000,\"OutputClippingConfigToFile\":false,\"ClippingConfigOutputFilePath\":null,\"IsInputPathADirectory\":false}]",
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 8000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailers(options, configFileOutputPath)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/a.wav\nFinished on trimming file, output: <work>\\c141\\media\\clipped\\a.wav\n",
+      "files": {
+        "cfg.json": "[{\"OutputToConsole\":true,\"MultiTaskFiles\":false,\"OutputDirectoryPath\":null,\"ProcessEveryFile\":false,\"RemoveIntro\":true,\"DeleteOriginalFiles\":false,\"IntroLengthInMilliseconds\":1000,\"InputPath\":\"media/a.wav\",\"TrailerLengthInMilliSeconds\":2000,\"OutputClippingConfigToFile\":false,\"ClippingConfigOutputFilePath\":null,\"IsInputPathADirectory\":false}]",
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 7000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailersWithOptionsFile(null) no default file",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "No parameters and no config file available, use -h for help\n",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailersWithOptionsFile(missing)",
+      "culture": "en-US",
+      "args": null,
+      "result": {
+        "$throws": "InvalidOperationException: Cannot find config file: missing.json"
+      },
+      "console": "",
+      "files": {
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "RemoveTrailersWithOptionsFile(cfg)",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media/a.wav\nFinished on trimming file, output: out\\a.wav\n",
+      "files": {
+        "cfg.json": "[{\"InputPath\":\"media/a.wav\",\"TrailerLengthInMilliSeconds\":2000,\"RemoveIntro\":true,\"IntroLengthInMilliseconds\":1000,\"OutputDirectoryPath\":\"out\"}]",
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9,
+        "out/a.wav": 7000
+      }
+    },
+    {
+      "method": "RemoveTrailersWithOptionsFile(null) with default file",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Starting on file: media\\a.wav\nFinished on trimming file, output: <work>\\c145\\media\\clipped\\a.wav\nStarting on file: media\\b.mp3\nFinished on trimming file, output: <work>\\c145\\media\\clipped\\b.mp3\n",
+      "files": {
+        "TrailerClipperConfig.json": "[{\"InputPath\":\"media\",\"TrailerLengthInMilliSeconds\":3000}]",
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/clipped/a.wav": 7000,
+        "media/clipped/b.mp3": 7040,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "CreateDefaultSampleConfig",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "",
+      "files": {
+        "TrailerClipperConfig.json": "[{\"OutputToConsole\":true,\"MultiTaskFiles\":false,\"OutputDirectoryPath\":\"Clipped\",\"ProcessEveryFile\":false,\"RemoveIntro\":true,\"DeleteOriginalFiles\":false,\"IntroLengthInMilliseconds\":3500,\"InputPath\":\"Original\",\"TrailerLengthInMilliSeconds\":17500,\"OutputClippingConfigToFile\":false,\"ClippingConfigOutputFilePath\":null,\"IsInputPathADirectory\":false}]",
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    },
+    {
+      "method": "CreateDefaultSampleConfig twice",
+      "culture": "en-US",
+      "args": null,
+      "result": "(void)",
+      "console": "Cannot create a sample config file because a file with the name: TrailerClipperConfig.json, already exists\n",
+      "files": {
+        "TrailerClipperConfig.json": "[{\"OutputToConsole\":true,\"MultiTaskFiles\":false,\"OutputDirectoryPath\":\"Clipped\",\"ProcessEveryFile\":false,\"RemoveIntro\":true,\"DeleteOriginalFiles\":false,\"IntroLengthInMilliseconds\":3500,\"InputPath\":\"Original\",\"TrailerLengthInMilliSeconds\":17500,\"OutputClippingConfigToFile\":false,\"ClippingConfigOutputFilePath\":null,\"IsInputPathADirectory\":false}]",
+        "media/a.wav": 10000,
+        "media/b.mp3": 10000,
+        "media/notes.txt": 9
+      }
+    }
+  ]
+}
