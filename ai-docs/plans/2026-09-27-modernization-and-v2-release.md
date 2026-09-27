@@ -15,7 +15,7 @@ The first NuGet run of the package-modernize skill (references/nuget.md) on Mark
 
 ## Status
 
-Active. Plan ruled 2026-09-27 (see "Rulings"); Phase 2 done on branch v2, pull request open; Phase 3 review next.
+Active. Plan ruled 2026-09-27 (see "Rulings"); Phases 2 and 3 done, pull request #1 green on three OSes; waits for Mark's review and merge.
 
 ## Rulings (Mark, 2026-09-27)
 
@@ -103,15 +103,16 @@ src/TrailerClipperLib/TrailerClipperLib.csproj (PackageId `TrailerClipper`), `sr
 - [x] Remove the D12 files; add the templates
 - [x] Golden test first, green on the first build (138/150 first, the 12 were E9 and a test-side key order; then 150/150 on net10.0 and net48); canary (a planted line in src turns it red, reverted, green; both runs logged); golden files unchanged since the Phase 0 commit
 - [x] Source, unit and CLI tests (172 per framework), README, CHANGELOG, SECURITY.md, AGENTS.md
-- [ ] Verified on Windows (net10.0 and net48) locally (done) and from a fresh clone; Linux and macOS in CI
+- [x] Verified on Windows (net10.0 and net48) locally; Linux, macOS and Windows in CI (run 36335032052)
 - [x] Workflows (ci, release, verify-published) and Dependabot, SHA-pinned, actionlint 1.7.12, check-workflow-shell and zizmor clean
-- [ ] Pushed; pull request with a "For review" list. **Stop.**
+- [x] Pushed; pull request #1 with a "For review" list. **Stop.**
 ### Phase 3: review
-- [ ] Independent read-only review (prompts/review-subagent.md with the NuGet substitutions); findings fixed or answered
+- [x] Independent read-only review (prompts/review-subagent.md with the NuGet substitutions): 12 findings, all fixed or named (E11), summary on the pull request
 ### Phase 4: CI, settings, merge, cleanup
-- [ ] CI green; rulesets; `nuget` environment; merge after Mark's review; settings and scanning
+- [x] CI green; rulesets 24078385 and 24078386; `nuget` environment; settings and scanning
+- [ ] Merge after Mark's review (read the SHA and method back)
 ### Phase 5: release rehearsal
-- [ ] Mark adds the Trusted Publishing policy. **Stop.**
+- [x] Mark adds the Trusted Publishing policy (done 2026-09-27, before Phase 2).
 - [ ] v2.0.0-beta.1 tagged after green; **stop** for the approval; verified from nuget.org
 ### Phase 6: release
 - [ ] Changelog dated; v2.0.0 tagged; **stop** for the approval; verified; GitHub Release; 1.x deprecated by Mark
