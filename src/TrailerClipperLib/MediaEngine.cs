@@ -23,6 +23,7 @@ namespace TrailerClipperLib
     {
         public decimal GetDurationInMilliseconds(string filePath, string? ffmpegDirectory)
         {
+            RefuseQuotes(filePath);
             var options = Options(ffmpegDirectory);
             IMediaAnalysis analysis;
             try
@@ -34,13 +35,22 @@ namespace TrailerClipperLib
                 throw new InvalidOperationException("ffprobe could not read '" + filePath + "': " + LastLines(e.Message), e);
             }
 
-            // MediaToolkit parsed ffmpeg's "Duration: hh:mm:ss.cc" line, so 1.1.0 saw the duration in whole hundredths.
-            var hundredths = Math.Floor((decimal)analysis.Format.Duration.Ticks / TimeSpan.TicksPerMillisecond / 10m);
+            return DurationAsMediaToolkitReadIt(analysis.Format.Duration);
+        }
+
+        // MediaToolkit parsed ffmpeg's "Duration: hh:mm:ss.cc" line, which ffmpeg rounds to the nearest hundredth
+        // (av_dump_format adds 5000 microseconds before cutting the digits), so 1.1.0 saw 1.2375 s as 1.24 s.
+        internal static decimal DurationAsMediaToolkitReadIt(TimeSpan duration)
+        {
+            var microseconds = duration.Ticks / 10;
+            var hundredths = (microseconds + 5000) / 10000;
             return hundredths * 10m;
         }
 
         public void Cut(string inputFilePath, string outputFilePath, TimeSpan seek, TimeSpan length, string? ffmpegDirectory)
         {
+            RefuseQuotes(inputFilePath);
+            RefuseQuotes(outputFilePath);
             try
             {
                 FFMpegArguments
@@ -52,6 +62,16 @@ namespace TrailerClipperLib
             {
                 throw new InvalidOperationException("ffmpeg could not clip '" + inputFilePath + "': " + LastLines(e.Message), e);
             }
+        }
+
+        // FFMpegCore puts each path in double quotes without escaping, so a '"' in a file name (legal on Linux and macOS)
+        // would end the path and pass the rest to ffmpeg as options.
+        internal static void RefuseQuotes(string path)
+        {
+#pragma warning disable CA2249 // string.Contains(char) does not exist on netstandard2.0
+            if (path.IndexOf('"') >= 0)
+#pragma warning restore CA2249
+                throw new InvalidOperationException("File names that contain a double quote are not supported: '" + path + "'");
         }
 
         private static FFOptions Options(string? ffmpegDirectory)

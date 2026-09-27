@@ -85,7 +85,7 @@ clipper.RemoveTrailers(new TrailerClipperOptions("Episodes", 17500m)
 
 ## What it is not
 
-A video editor or an ffmpeg wrapper for general use: it cuts a fixed length off the start and the end of each file, re-encoding with ffmpeg's defaults for the file's extension. It runs only the ffmpeg and ffprobe it finds and never touches the network.
+A video editor or an ffmpeg wrapper for general use. File names containing a double quote are refused. it cuts a fixed length off the start and the end of each file, re-encoding with ffmpeg's defaults for the file's extension. It runs only the ffmpeg and ffprobe it finds and never touches the network.
 
 ## Licence
 

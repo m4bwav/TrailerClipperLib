@@ -132,9 +132,11 @@ namespace TrailerClipperLib
         private static bool IsOption(string argument, string option) =>
             string.Equals(argument.Trim(), option, StringComparison.OrdinalIgnoreCase);
 
-        // 2.0.0 (E4): the decimal point is "." in every culture; 1.1.0 parsed in the current culture.
+        // 2.0.0 (E4): the decimal point is "." in every culture; 1.1.0 parsed in the current culture. The styles are
+        // 1.1.0's (NumberStyles.Number: signs before or after, spaces) without thousands separators, which would
+        // otherwise read "2000,5" as 20005 again.
         internal static bool TryParseMilliseconds(string text, out decimal value) =>
-            decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+            decimal.TryParse(text, NumberStyles.Number & ~NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out value);
 
         private static TrailerClipperOptions? ProcessInputOptions(string[] args)
         {

@@ -46,7 +46,14 @@ namespace TClipper
                 return false;
             }
 
-            if (!assumeYes && !Console.IsInputRedirected)
+            if (!assumeYes && Console.IsInputRedirected)
+            {
+                // Never run a package manager (sudo on Linux) unasked from a script.
+                Console.Error.WriteLine("Not a terminal, so not asking: run 'tclipper --install-ffmpeg --yes' to install without a question.");
+                return false;
+            }
+
+            if (!assumeYes)
             {
                 Console.Write("Run '" + Describe(command) + "'? [Y/n] ");
                 var answer = (Console.ReadLine() ?? string.Empty).Trim();

@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="PublicApi-1.1.0.txt" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../Golden/1.1.0.json" Link="Golden/1.1.0.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../Golden/fixtures/*" Link="Golden/fixtures/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

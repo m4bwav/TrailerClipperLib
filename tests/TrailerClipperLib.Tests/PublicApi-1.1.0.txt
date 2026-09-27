@@ -1,0 +1,43 @@
+# Public API of the published TrailerClipper 1.1.0 (lib/TrailerClipperLib.dll from nuget.org), listed by reflection
+# on 2026-09-27 with the PowerShell snippet in ai-docs/log.md. PublicApiTests checks that 2.x still has every line.
+TrailerClipperLib.ClipperCommandLineInterpreter constructor .ctor()
+TrailerClipperLib.ClipperCommandLineInterpreter method ParseCommandLineArgs(String[] args)
+TrailerClipperLib.ClipperCommandLineInterpreter method ReadConfigFilePath(String[] args)
+TrailerClipperLib.ClipperCommandLineInterpreter method ReadConfigOutputPath(String[] args)
+TrailerClipperLib.ClipperCommandLineInterpreter method ShouldCreateDefaultSampleConfig(String[] args)
+TrailerClipperLib.ClipperCommandLineInterpreter method ShouldDisplayHelp(String[] args)
+TrailerClipperLib.ClipperCommandLineInterpreter method ShouldDumpConfigFile(String[] args)
+TrailerClipperLib.ICommandLineInterpreter method ParseCommandLineArgs(String[] args)
+TrailerClipperLib.ITrailerClipperService method RemoveIntros(String path, Decimal introLenghtInMilliseconds)
+TrailerClipperLib.ITrailerClipperService method RemoveIntrosAndTrailers(String path, Decimal introLenghtInMilliseconds, Decimal trailerLenghtInMilliseconds)
+TrailerClipperLib.ITrailerClipperService method RemoveTrailers(IEnumerable`1 options, Boolean saveOptionsToFile)
+TrailerClipperLib.ITrailerClipperService method RemoveTrailers(IEnumerable`1 options, String configFileOutputPath)
+TrailerClipperLib.ITrailerClipperService method RemoveTrailers(String path, Decimal trailerLenghtInMilliseconds)
+TrailerClipperLib.ITrailerClipperService method RemoveTrailers(TrailerClipperOptions options)
+TrailerClipperLib.ITrailerClipperService method RemoveTrailersWithOptionsFile(String pathToOptionsFile)
+TrailerClipperLib.TcHelpReader constructor .ctor()
+TrailerClipperLib.TcHelpReader method ReadHelpFileText()
+TrailerClipperLib.TrailerClipper constructor .ctor()
+TrailerClipperLib.TrailerClipper method CreateDefaultSampleConfig()
+TrailerClipperLib.TrailerClipper method RemoveIntros(String path, Decimal introLenghtInMilliseconds)
+TrailerClipperLib.TrailerClipper method RemoveIntrosAndTrailers(String path, Decimal introLenghtInMilliseconds, Decimal trailerLenghtInMilliseconds)
+TrailerClipperLib.TrailerClipper method RemoveTrailers(IEnumerable`1 options, Boolean saveOptionsToFile)
+TrailerClipperLib.TrailerClipper method RemoveTrailers(IEnumerable`1 options, String configFileOutputPath)
+TrailerClipperLib.TrailerClipper method RemoveTrailers(String directoryPath, Decimal milliseconds)
+TrailerClipperLib.TrailerClipper method RemoveTrailers(TrailerClipperOptions options)
+TrailerClipperLib.TrailerClipper method RemoveTrailersWithOptionsFile(String pathToOptionsFile)
+TrailerClipperLib.TrailerClipperOptions constructor .ctor()
+TrailerClipperLib.TrailerClipperOptions constructor .ctor(String path, Decimal milliseconds)
+TrailerClipperLib.TrailerClipperOptions constructor .ctor(String path)
+TrailerClipperLib.TrailerClipperOptions property Boolean DeleteOriginalFiles
+TrailerClipperLib.TrailerClipperOptions property Boolean IsInputPathADirectory
+TrailerClipperLib.TrailerClipperOptions property Boolean MultiTaskFiles
+TrailerClipperLib.TrailerClipperOptions property Boolean OutputClippingConfigToFile
+TrailerClipperLib.TrailerClipperOptions property Boolean OutputToConsole
+TrailerClipperLib.TrailerClipperOptions property Boolean ProcessEveryFile
+TrailerClipperLib.TrailerClipperOptions property Boolean RemoveIntro
+TrailerClipperLib.TrailerClipperOptions property Decimal IntroLengthInMilliseconds
+TrailerClipperLib.TrailerClipperOptions property Decimal TrailerLengthInMilliSeconds
+TrailerClipperLib.TrailerClipperOptions property String ClippingConfigOutputFilePath
+TrailerClipperLib.TrailerClipperOptions property String InputPath
+TrailerClipperLib.TrailerClipperOptions property String OutputDirectoryPath

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TrailerClipperLib
 {
@@ -41,12 +42,21 @@ namespace TrailerClipperLib
     {
         private const string DefaultTrailerClipperOptionFileName = "TrailerClipperConfig.json";
 
-        // The config file keeps 1.1.0's JavaScriptSerializer text: property names as declared, no indentation, and
-        // (like JavaScriptSerializer) property names read without regard to case.
-        private static readonly JsonSerializerOptions SerializerOptions = new()
+        // The config file keeps 1.1.0's JavaScriptSerializer text: property names as declared, no indentation, non-ASCII
+        // as is, and < > & ' escaped as < > & ' (see ConfigText).
+        private static readonly JsonSerializerOptions WriteOptions = new()
         {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            PropertyNameCaseInsensitive = true
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+
+        // Reading is as forgiving as JavaScriptSerializer where System.Text.Json can be: property names in any case,
+        // numbers and booleans written as strings, trailing commas.
+        private static readonly JsonSerializerOptions ReadOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
+            AllowTrailingCommas = true,
+            Converters = { new LenientBooleanConverter() }
         };
 
         private static readonly TrailerClipperOptions DefaultConfig = new()
@@ -119,10 +129,13 @@ namespace TrailerClipperLib
                 SerializeOptionsToFile(optionList, configFileOutputPath!);
         }
 
-        /// <summary>Removes the last <paramref name="trailerLenghtInMilliseconds" /> from a file or from every media file in a directory.</summary>
-        public void RemoveTrailers(string path, decimal trailerLenghtInMilliseconds)
+        /// <summary>Removes the last <paramref name="milliseconds" /> from a file or from every media file in a directory.</summary>
+        /// <remarks>The parameter names are 1.1.0's (they differ from the interface's), so named arguments keep working.</remarks>
+#pragma warning disable CA1725 // 1.1.0 named these parameters differently from the interface; callers may use the names.
+        public void RemoveTrailers(string directoryPath, decimal milliseconds)
+#pragma warning restore CA1725
         {
-            var options = new TrailerClipperOptions(path, trailerLenghtInMilliseconds);
+            var options = new TrailerClipperOptions(directoryPath, milliseconds);
 
             RemoveTrailers(options);
         }
@@ -146,7 +159,9 @@ namespace TrailerClipperLib
 
             var text = File.ReadAllText(pathToOptionsFile);
 
-            var options = JsonSerializer.Deserialize<List<TrailerClipperOptions>>(text, SerializerOptions) ?? new List<TrailerClipperOptions>();
+            // 2.0.0 (E11): a file holding only null throws here; 1.1.0 threw NullReferenceException.
+            var options = JsonSerializer.Deserialize<List<TrailerClipperOptions>>(text, ReadOptions)
+                ?? throw new InvalidOperationException("Config file holds no clipping settings: " + pathToOptionsFile);
 
             BeginClipping(options);
         }
@@ -193,7 +208,7 @@ namespace TrailerClipperLib
                 return;
             }
 
-            var json = JsonSerializer.Serialize(new[] { DefaultConfig }, SerializerOptions);
+            var json = ConfigText(new[] { DefaultConfig });
 
             File.WriteAllText(DefaultTrailerClipperOptionFileName, json);
         }
@@ -206,9 +221,29 @@ namespace TrailerClipperLib
 
         private static void SerializeOptionsToFile(IEnumerable<TrailerClipperOptions> options, string outputFilePath)
         {
-            var json = JsonSerializer.Serialize(options, SerializerOptions);
+            var json = ConfigText(options);
 
             File.WriteAllText(outputFilePath, json);
+        }
+
+        // Property names are fixed ASCII, so these four characters can only occur inside string values.
+        internal static string ConfigText(IEnumerable<TrailerClipperOptions> options) =>
+            JsonSerializer.Serialize(options, WriteOptions)
+                .Replace("<", @"\u003c")
+                .Replace(">", @"\u003e")
+                .Replace("&", @"\u0026")
+                .Replace("'", @"\u0027");
+
+        private sealed class LenientBooleanConverter : JsonConverter<bool>
+        {
+            public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                if (reader.TokenType == JsonTokenType.String && bool.TryParse(reader.GetString(), out var value))
+                    return value;
+                return reader.GetBoolean();
+            }
+
+            public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) => writer.WriteBooleanValue(value);
         }
 
         private void BeginClipping(IEnumerable<TrailerClipperOptions> options)

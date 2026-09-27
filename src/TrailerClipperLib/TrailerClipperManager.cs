@@ -46,7 +46,17 @@ namespace TrailerClipperLib
             var failures = new ConcurrentQueue<Exception>();
 
             if (options.MultiTaskFiles)
-                Parallel.ForEach(files, filePath => RemoveTrailerFromSingleFile(filePath, options, failures));
+            {
+                try
+                {
+                    Parallel.ForEach(files, filePath => RemoveTrailerFromSingleFile(filePath, options, failures));
+                }
+                catch (AggregateException e) when (e.InnerExceptions.OfType<ToolNotFoundException>().Any())
+                {
+                    // Parallel.ForEach wraps what the body throws; a missing ffmpeg must surface as itself.
+                    throw e.InnerExceptions.OfType<ToolNotFoundException>().First();
+                }
+            }
             else
                 foreach (var filePath in files)
                     RemoveTrailerFromSingleFile(filePath, options, failures);

@@ -23,3 +23,4 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - 172 tests per framework (golden, unit with a fake engine, locator); dotnet format clean; pack: TrailerClipper (lib/netstandard2.0, lib/net10.0, README) and TrailerClipper.Tool; the tool installed from artifacts clipped the fixtures, and an intro-only call works.
 - actionlint 1.7.12, check-workflow-shell.py and zizmor 1.30.1 --offline: clean.
 ## [2026-09-27] index | rebuilt (4 entries)
+## [2026-09-27] index | rebuilt (5 entries)

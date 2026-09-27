@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using TrailerClipperLib;
 
 namespace TClipper
@@ -12,8 +14,8 @@ namespace TClipper
 
         private static int Main(string[] args)
         {
-            if (args.Length == 1 && (args[0] == "--install-ffmpeg" || args[0] == "-install-ffmpeg"))
-                return FFmpegInstaller.Install(assumeYes: false) ? 0 : 1;
+            if (args.Length >= 1 && (args[0] == "--install-ffmpeg" || args[0] == "-install-ffmpeg"))
+                return FFmpegInstaller.Install(assumeYes: args.Skip(1).Any(a => a == "--yes" || a == "-y")) ? 0 : 1;
 
             try
             {
@@ -30,12 +32,24 @@ namespace TClipper
 
                 return RunOnce(args);
             }
-            catch (Exception e) when (e is InvalidOperationException || e is IOException || e is ArgumentException)
+            catch (Exception e) when (IsUserError(e))
             {
-                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(Describe(e));
                 return 1;
             }
         }
+
+        // Errors the user can act on get a message and exit code 1 instead of a stack trace.
+        private static bool IsUserError(Exception e) =>
+            e is InvalidOperationException || e is IOException || e is ArgumentException || e is JsonException || e is IndexOutOfRangeException;
+
+        private static string Describe(Exception e) => e switch
+        {
+            JsonException => "The config file is not valid JSON: " + e.Message,
+            // 1.1.0's interpreter reads the value after -c or -o without checking that there is one.
+            IndexOutOfRangeException => "An option is missing its value (-c <config_filepath>, -o <output_filename>). Use -h for help.",
+            _ => e.Message
+        };
 
         private static int RunOnce(string[] args)
         {
@@ -43,9 +57,9 @@ namespace TClipper
             {
                 return Run(args);
             }
-            catch (Exception e) when (e is InvalidOperationException || e is IOException || e is ArgumentException)
+            catch (Exception e) when (IsUserError(e))
             {
-                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(Describe(e));
                 return 1;
             }
         }

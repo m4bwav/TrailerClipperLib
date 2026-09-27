@@ -31,7 +31,8 @@ namespace TrailerClipperLib
             if (!string.IsNullOrWhiteSpace(preferredDirectory))
                 return HoldsBoth(preferredDirectory!) ? Path.GetFullPath(preferredDirectory!) : null;
 
-            return CandidateDirectories().FirstOrDefault(HoldsBoth);
+            var found = CandidateDirectories().FirstOrDefault(HoldsBoth);
+            return found == null ? null : Path.GetFullPath(found);
         }
 
         /// <summary>
@@ -44,8 +45,13 @@ namespace TrailerClipperLib
                 yield return fromEnvironment!;
 
             var path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+            // Only absolute entries: a relative one such as "." would run whatever ffmpeg sits in the current folder.
             foreach (var entry in path.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries))
-                yield return entry.Trim().Trim('"');
+            {
+                var folder = entry.Trim().Trim('"');
+                if (Path.IsPathRooted(folder))
+                    yield return folder;
+            }
 
             foreach (var folder in WellKnownDirectories())
                 yield return folder;
