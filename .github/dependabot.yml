@@ -1,5 +1,6 @@
 # Weekly update pull requests. Merge when CI is green; read the release notes before merging a major.
 # The actions are pinned to commit SHAs with the version in a comment; Dependabot updates both.
+# The three-day cooldown keeps brand-new releases out until they have had time to be pulled if bad.
 version: 2
 updates:
   - package-ecosystem: nuget
@@ -7,14 +8,13 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 3
     groups:
       test-packages:
         patterns:
           - "NUnit*"
-          - "xunit*"
           - "Microsoft.NET.Test.Sdk"
-          - "Microsoft.Testing.*"
-          - "coverlet.*"
   # Updates the SDK version in global.json.
   - package-ecosystem: dotnet-sdk
     directory: /
@@ -26,3 +26,5 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 3

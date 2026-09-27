@@ -13,4 +13,13 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 
 ## [2026-09-27] add | Phase 1: plan and proposed decision
 - ai-docs/plans/2026-09-27-modernization-and-v2-release.md (D1-D16, E1-E10); ai-docs/decisions/2026-09-27-v2-promise-system-ffmpeg-named-exceptions.md (proposed). Stop for Mark's plan review.
+
+## [2026-09-27] update | Plan ruled; Phase 2 rewrite on branch v2
+- Rulings in the plan's "Rulings" section: FFMpegCore for D5, automated ffmpeg install through the OS package manager, D8 and D14 accepted, Trusted Publishing policy added by Mark.
+- NUnit 5.0.0 was published on 2026-09-27, inside the three-day cooldown: tests use NUnit 4.6.1.
+- Golden replay: GoldenRunner.cs generated from the capture program; first build 138/150 (E9 MP3 lengths, a test-side key order), then 150/150 on net10.0 and net48. Canary: "Starting on file" changed to "Starting file" in TrailerClipperManager.cs, 16 cases red; reverted with git checkout -- src/, 150 green. `git diff --exit-code 8e59145 -- tests/Golden/1.1.0.json tests/Golden/Capture tests/Golden/fixtures`: empty.
+- An IDE restore wrote tests/Golden/Capture/packages.lock.json and it was committed in f0f9c94; untracked and gitignored in the next commit.
+- help.txt keeps 1.1.0's BOM and CRLF (-text); it was stored LF since 2015, so Linux checkouts would have differed from the recording.
+- 172 tests per framework (golden, unit with a fake engine, locator); dotnet format clean; pack: TrailerClipper (lib/netstandard2.0, lib/net10.0, README) and TrailerClipper.Tool; the tool installed from artifacts clipped the fixtures, and an intro-only call works.
+- actionlint 1.7.12, check-workflow-shell.py and zizmor 1.30.1 --offline: clean.
 ## [2026-09-27] index | rebuilt (4 entries)

@@ -15,7 +15,13 @@ The first NuGet run of the package-modernize skill (references/nuget.md) on Mark
 
 ## Status
 
-Active. Phase 1 reached on 2026-09-27; waits for Mark's ruling on the decisions table (above all D5, D8 and D14).
+Active. Plan ruled 2026-09-27 (see "Rulings"); Phase 2 done on branch v2, pull request open; Phase 3 review next.
+
+## Rulings (Mark, 2026-09-27)
+
+- D5 changed: FFMpegCore 5.5.0 runs ffmpeg (Mark preferred it). It does not bundle ffmpeg, and its Downloader extension fetches ffmpeg 6.1 (2023) from ffbinaries.com with no hash check, so it is not used. Mark then asked for the ffmpeg install to be as easy and automated as possible: the library finds ffmpeg in the usual install folders without configuration (FFmpegLocator), and the tool installs it through winget, Homebrew, apt or dnf (`tclipper --install-ffmpeg`, and an offer when missing). The library never downloads.
+- D8 and D14 accepted. D13 done by Mark: nuget.org Trusted Publishing policy "TrailerClipperLib Ci", owner rogersm0, scope "push new packages and package versions" (needed: TrailerClipper.Tool is a new id), glob TrailerClipper*, repository m4bwav/TrailerClipperLib (id 43230238), workflow release.yml, environment nuget; shown Active.
+- Every other recommendation stands. E9 settled from a real run: MP3 output is the exact requested length with ffmpeg 9.0.1.
 
 ## Goal
 
@@ -94,11 +100,11 @@ src/TrailerClipperLib/TrailerClipperLib.csproj (PackageId `TrailerClipper`), `sr
 ### Phase 1: plan
 - [x] This plan and the decision record. **Stop**: Mark rules on the table, above all D5 (no bundled ffmpeg), D8 (net40 to net461 dropped), D13 (the Trusted Publishing policy is his to add) and D14 (a second package).
 ### Phase 2: rewrite on branch v2
-- [ ] Remove the D12 files; add the templates
-- [ ] Golden test first, green on the first build; canary (a planted line in src turns it red, reverted, green; both runs logged); golden files unchanged since the Phase 0 commit
-- [ ] Source, unit and CLI tests, README, CHANGELOG, SECURITY.md, AGENTS.md
-- [ ] Verified on Windows (net10.0 and net48) locally and from a fresh clone; Linux and macOS in CI
-- [ ] Workflows (ci, release, verify-published) and Dependabot, SHA-pinned, actionlint and check-workflow-shell clean
+- [x] Remove the D12 files; add the templates
+- [x] Golden test first, green on the first build (138/150 first, the 12 were E9 and a test-side key order; then 150/150 on net10.0 and net48); canary (a planted line in src turns it red, reverted, green; both runs logged); golden files unchanged since the Phase 0 commit
+- [x] Source, unit and CLI tests (172 per framework), README, CHANGELOG, SECURITY.md, AGENTS.md
+- [ ] Verified on Windows (net10.0 and net48) locally (done) and from a fresh clone; Linux and macOS in CI
+- [x] Workflows (ci, release, verify-published) and Dependabot, SHA-pinned, actionlint 1.7.12, check-workflow-shell and zizmor clean
 - [ ] Pushed; pull request with a "For review" list. **Stop.**
 ### Phase 3: review
 - [ ] Independent read-only review (prompts/review-subagent.md with the NuGet substitutions); findings fixed or answered

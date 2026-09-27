@@ -17,8 +17,7 @@ namespace TClipper
 
             try
             {
-                Run(args);
-                return 0;
+                return Run(args);
             }
             catch (ToolNotFoundException)
             {
@@ -42,8 +41,7 @@ namespace TClipper
         {
             try
             {
-                Run(args);
-                return 0;
+                return Run(args);
             }
             catch (Exception e) when (e is InvalidOperationException || e is IOException || e is ArgumentException)
             {
@@ -52,13 +50,13 @@ namespace TClipper
             }
         }
 
-        // The console app of 1.1.0, unchanged apart from the exit codes above.
-        private static void Run(string[] args)
+        // The console app of 1.1.0; 2.0.0 adds exit codes (1 for arguments it cannot use, where 1.1.0 always exited 0).
+        private static int Run(string[] args)
         {
             if (args.Length < 1)
             {
                 Clipper.RemoveTrailersWithOptionsFile();
-                return;
+                return 0;
             }
 
             if (CommandProcessor.ShouldDisplayHelp(args))
@@ -67,7 +65,7 @@ namespace TClipper
 
                 Console.Write(helpFile);
 
-                return;
+                return 0;
             }
 
             if (CommandProcessor.ShouldCreateDefaultSampleConfig(args))
@@ -78,13 +76,13 @@ namespace TClipper
             if (!string.IsNullOrWhiteSpace(configPath))
             {
                 Clipper.RemoveTrailersWithOptionsFile(configPath);
-                return;
+                return 0;
             }
 
             var options = CommandProcessor.ParseCommandLineArgs(args);
 
             if (options == null)
-                return;
+                return args.Length == 1 && CommandProcessor.ShouldCreateDefaultSampleConfig(args) ? 0 : 1;
 
             if (CommandProcessor.ShouldDumpConfigFile(args))
             {
@@ -96,6 +94,8 @@ namespace TClipper
             {
                 Clipper.RemoveTrailers(options);
             }
+
+            return 0;
         }
     }
 }

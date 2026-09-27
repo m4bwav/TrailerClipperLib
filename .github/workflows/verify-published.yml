@@ -1,0 +1,113 @@
+# Run by hand after a release is approved: proves the published packages from nuget.org itself, not from this
+# repository. On Linux, macOS and Windows: waits until nuget.org lists the version, checks the repository signature,
+# builds a fresh consumer (net10.0 everywhere, net48 on Windows) that clips a fixture with the published library, and
+# installs the published tclipper tool and clips with it.
+name: verify-published
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version to verify, such as 2.0.0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify:
+    name: verify ${{ inputs.version }} (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/Golden/fixtures
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+      - name: Install ffmpeg (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - name: Install ffmpeg (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
+      - name: Install ffmpeg (Windows)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
+      - name: nuget.org lists both packages (the index can lag about 15 to 25 minutes)
+        run: |
+          for id in trailerclipper trailerclipper.tool; do
+            for attempt in $(seq 1 40); do
+              if curl -fsS "https://api.nuget.org/v3-flatcontainer/$id/index.json" | grep -q "\"$VERSION\""; then
+                echo "$id $VERSION listed"
+                continue 2
+              fi
+              sleep 30
+            done
+            echo "::error::$id $VERSION is not on nuget.org"
+            exit 1
+          done
+      - name: The downloaded package carries nuget.org's repository signature
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/lib.nupkg" "https://api.nuget.org/v3-flatcontainer/trailerclipper/$VERSION/trailerclipper.$VERSION.nupkg"
+          dotnet nuget verify "$RUNNER_TEMP/lib.nupkg" --all
+      - name: A fresh consumer clips with the published library
+        run: |
+          frameworks="net10.0"
+          if [ "$RUNNER_OS" = Windows ]; then frameworks="net10.0 net48"; fi
+          for tfm in $frameworks; do
+            dir="$RUNNER_TEMP/consumer-$tfm"
+            mkdir -p "$dir/media"
+            cp tests/Golden/fixtures/a.wav "$dir/media/"
+            cat > "$dir/Consumer.csproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>$tfm</TargetFramework><LangVersion>latest</LangVersion></PropertyGroup>
+            <ItemGroup>
+              <PackageReference Include="TrailerClipper" Version="[$VERSION]" />
+              <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+            </ItemGroup>
+          </Project>
+          EOF
+            cat > "$dir/Program.cs" <<'EOF'
+          using System;
+          using System.IO;
+          using TrailerClipperLib;
+
+          class Program
+          {
+              static int Main()
+              {
+                  new TrailerClipper().RemoveIntrosAndTrailers("media", 1500m, 2000m);
+                  var ok = File.Exists(Path.Combine("media", "clipped", "a.wav"));
+                  Console.WriteLine(ok ? "clipped" : "no output");
+                  return ok ? 0 : 1;
+              }
+          }
+          EOF
+            (cd "$dir" && dotnet run -c Release)
+            duration=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$dir/media/clipped/a.wav")
+            echo "$tfm: clipped length $duration s"
+            [ "$(printf '%.1f' "$duration")" = "6.5" ]
+          done
+      - name: The published tclipper installs and clips
+        run: |
+          dotnet tool install TrailerClipper.Tool --version "$VERSION" --tool-path "$RUNNER_TEMP/tool"
+          mkdir -p "$RUNNER_TEMP/tool-run/media"
+          cp tests/Golden/fixtures/a.wav "$RUNNER_TEMP/tool-run/media/"
+          cd "$RUNNER_TEMP/tool-run"
+          "$RUNNER_TEMP/tool/tclipper" -h | grep -q 'Standard Usage'
+          "$RUNNER_TEMP/tool/tclipper" media 2000
+          test -s media/clipped/a.wav

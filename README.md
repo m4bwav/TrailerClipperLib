@@ -1,21 +1,92 @@
-# TrailerClipperLib
-A library and console app for batch removing trailers from video files.  
+# TrailerClipper
 
-Standard Usage - Remove trailer:   
-TClipper &lt;path> &lt;trailer_length_in_milliseconds>   
-&lt;path> can be a single file or a directory   
+[![NuGet](https://img.shields.io/nuget/v/TrailerClipper)](https://www.nuget.org/packages/TrailerClipper)
+[![ci](https://github.com/m4bwav/TrailerClipperLib/actions/workflows/ci.yml/badge.svg)](https://github.com/m4bwav/TrailerClipperLib/actions/workflows/ci.yml)
+[![Downloads](https://img.shields.io/nuget/dt/TrailerClipper)](https://www.nuget.org/packages/TrailerClipper)
 
-Options:  
-﻿-h - Displays this help  
--o &lt;output_filename> - outputs the configuration of the clipping to file, so that the configuration can be used again.  
--c, -config &lt;config_filepath> - reads the clipping parameters from a file, rather than from the command-line   
--i, -intro &lt;intro_length_in_milliseconds> - This options allows you to trim an intro rather than a trailer.  Can be used  with or without the trailer trimming functionality  
--cf, -consoleoff - Turns off logging output to console  
--d - delete the original files that are trimmed, off by default  
--m, -multi - Use multi-tasking, experimental, generally does not increase the speed of the trimming, but may show slight improvement  
--a, -allfiles - Process files that don't have a valid file extension as well as those that do.  Off by default  
+Cuts the intro and the trailer off video and audio files, one file or a whole folder at a time, with ffmpeg. Two packages:
 
+- **`tclipper`**, a command-line tool (`TrailerClipper.Tool`), for clipping from a terminal.
+- **`TrailerClipper`**, the library behind it, for .NET code (netstandard2.0 and net10.0, so .NET Framework 4.6.2+ and every current .NET, on Windows, macOS and Linux).
 
-This library and console app uses nuget package for project MediaToolKit: https://github.com/AydinAdn/MediaToolkit  
-"MediaToolkit is licensed under the [MIT license](https://github.com/AydinAdn/MediaToolkit/blob/master/LICENSE.md)  
-MediaToolkit uses [FFmpeg](http://ffmpeg.org), a multimedia framework which is licensed under the [LGPLv2.1 license](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html), its source can be downloaded from [here](https://github.com/AydinAdn/MediaToolkit/tree/master/FFMpeg%20src)"
+## The tool
+
+```
+dotnet tool install -g TrailerClipper.Tool
+tclipper --install-ffmpeg        # only if ffmpeg is not installed yet
+tclipper <path> <trailer_length_in_milliseconds>
+```
+
+`<path>` is a file or a folder; in a folder every `m4b`, `wav`, `mp3`, `mp4`, `flv`, `avi`, `mpg` and `mov` file is clipped. The clipped copies go to a `clipped` folder beside the input.
+
+```
+tclipper Episodes 17500                  # drop the last 17.5 s of every file in Episodes
+tclipper -i 3500 Episodes 17500          # and the first 3.5 s
+tclipper -i 3500 Episodes                # only the first 3.5 s
+tclipper -o saved.json Episodes 17500    # clip, then save these settings
+tclipper -c saved.json                   # clip again with the saved settings
+tclipper -z                              # write a sample TrailerClipperConfig.json
+tclipper                                 # clip with TrailerClipperConfig.json from the current folder
+```
+
+Options: `-h` help; `-o <file>` save the settings; `-c`, `-config <file>` read them; `-i`, `-intro <ms>` remove an intro; `-cf`, `-consoleoff` no progress lines; `-d` delete each original after clipping; `-m`, `-multi` clip files in parallel; `-a`, `-allfiles` try every file, whatever its extension; `-z` write a sample config. Options go before the path. Lengths are milliseconds with `.` as the decimal point.
+
+### ffmpeg
+
+TrailerClipper needs `ffmpeg` and `ffprobe`. It looks for them in `TrailerClipperOptions.FFmpegDirectory`, the `TRAILERCLIPPER_FFMPEG` environment variable, `PATH`, and then the folders the usual installers use (winget, Homebrew, `/usr/local/bin`, `/usr/bin`, Chocolatey, Scoop), so a fresh install works without opening a new terminal.
+
+When ffmpeg is missing, `tclipper` offers to install it, and `tclipper --install-ffmpeg` does so directly. Either way it runs your system's package manager, which downloads a current build and checks it:
+
+| System | Command tclipper runs |
+|---|---|
+| Windows | `winget install --id Gyan.FFmpeg --exact` |
+| macOS | `brew install ffmpeg` |
+| Linux | `sudo apt-get install -y ffmpeg`, or `sudo dnf install -y ffmpeg` |
+
+TrailerClipper never downloads ffmpeg itself.
+
+## The library
+
+```
+dotnet add package TrailerClipper
+```
+
+```csharp
+using TrailerClipperLib;
+
+var clipper = new TrailerClipper();
+clipper.RemoveTrailers("Episodes", 17500m);                   // a file or a folder
+clipper.RemoveIntros("Episodes", 3500m);
+clipper.RemoveIntrosAndTrailers("Episodes", 3500m, 17500m);
+
+clipper.RemoveTrailers(new TrailerClipperOptions("Episodes", 17500m)
+{
+    RemoveIntro = true,
+    IntroLengthInMilliseconds = 3500m,
+    OutputDirectoryPath = "Clipped",
+    FFmpegDirectory = @"C:\tools\ffmpeg\bin",   // optional; see "ffmpeg" above
+    OutputToConsole = false
+});
+```
+
+`ClipperCommandLineInterpreter` turns the tool's arguments into `TrailerClipperOptions`; `FFmpegLocator.Find()` says where ffmpeg was found (or null).
+
+### What happens at the edges
+
+- A path that does not exist throws `FileNotFoundException`; a negative length throws `ArgumentOutOfRangeException`.
+- A file whose intro and trailer add up to its whole length or more is skipped, with a line on the console; nothing is written for it.
+- A file ffmpeg cannot read does not stop the batch: the other files are clipped, then an `InvalidOperationException` names the failures.
+- Missing ffmpeg throws `ToolNotFoundException` (an `InvalidOperationException`) whose message says how to install it.
+- The progress lines go to the console unless `OutputToConsole` is false.
+
+## Upgrading from 1.x
+
+2.0.0 gives the same answers as 1.1.0 for everything 1.1.0 did right, proven against a recording of the published 1.1.0 (`tests/Golden`), and fixes what it did wrong: see [CHANGELOG.md](CHANGELOG.md). The main change: ffmpeg is no longer bundled (1.1.0 carried a 2015 build inside MediaToolkit.dll, Windows only), so install it once as above. The namespace, class and method names are unchanged.
+
+## What it is not
+
+A video editor or an ffmpeg wrapper for general use: it cuts a fixed length off the start and the end of each file, re-encoding with ffmpeg's defaults for the file's extension. It runs only the ffmpeg and ffprobe it finds and never touches the network.
+
+## Licence
+
+MIT. ffmpeg is a separate program under its own licence (LGPL or GPL, depending on the build you install). FFMpegCore, which runs it, is MIT.

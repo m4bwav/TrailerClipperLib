@@ -45,3 +45,10 @@ dotnet_diagnostic.CA1822.severity = none
 # CA1707: test names use underscores on purpose.
 [tests/**.cs]
 dotnet_diagnostic.CA1707.severity = none
+# Tests use literal arrays in assertions and hold console writers per test; neither matters there.
+dotnet_diagnostic.CA1861.severity = none
+dotnet_diagnostic.CA1001.severity = none
+
+# Generated from tests/Golden/Capture/Program.cs; kept as the capture wrote it.
+[tests/TrailerClipperLib.Tests/GoldenRunner.cs]
+generated_code = true
