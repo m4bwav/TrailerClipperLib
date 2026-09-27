@@ -1,7 +1,7 @@
 ---
 title: Modernization and v2 release
 kind: plan
-status: active
+status: done
 date: 2026-09-27
 verified: 2026-09-27
 stale_after: never
@@ -15,7 +15,7 @@ The first NuGet run of the package-modernize skill (references/nuget.md) on Mark
 
 ## Status
 
-Active. Plan ruled 2026-09-27 (see "Rulings"); Phases 2 and 3 done, pull request #1 green on three OSes; waits for Mark's review and merge.
+Done 2026-09-27: 2.0.0 of both packages released and verified from nuget.org; 1.x deprecation is Mark's (UI), listed in the HANDOFF.
 
 ## Rulings (Mark, 2026-09-27)
 
@@ -110,14 +110,15 @@ src/TrailerClipperLib/TrailerClipperLib.csproj (PackageId `TrailerClipper`), `sr
 - [x] Independent read-only review (prompts/review-subagent.md with the NuGet substitutions): 12 findings, all fixed or named (E11), summary on the pull request
 ### Phase 4: CI, settings, merge, cleanup
 - [x] CI green; rulesets 24078385 and 24078386; `nuget` environment; settings and scanning
-- [ ] Merge after Mark's review (read the SHA and method back)
+- [x] Merged by Mark as a merge commit, ab3a984 (2026-09-27 17:03)
 ### Phase 5: release rehearsal
 - [x] Mark adds the Trusted Publishing policy (done 2026-09-27, before Phase 2).
-- [ ] v2.0.0-beta.1 tagged after green; **stop** for the approval; verified from nuget.org
+- [x] v2.0.0-beta.1 tagged on ab3a984 after ci green (36335507076); approved by Mark; release 36335667408; verify-published 36336494800 green after a rerun (the tool install read the registration index before it listed the tool; #4 fixes the wait)
 ### Phase 6: release
-- [ ] Changelog dated; v2.0.0 tagged; **stop** for the approval; verified; GitHub Release; 1.x deprecated by Mark
+- [x] Changelog dated (#3, 4a41b49); v2.0.0 tagged after ci green (36336712092); approved by Mark; release 36336887025 with GitHub Release; verify-published 36338281647 green on Linux, macOS and Windows
+- [ ] 1.x deprecated by Mark on nuget.org (UI; fields in the HANDOFF)
 ### Phase 7: wrap-up
-- [ ] HANDOFF, inventory row, lessons into the skill, kickoff corrections
+- [x] HANDOFF, inventory row, lessons into the skill, kickoff corrections
 
 ## Test strategy
 

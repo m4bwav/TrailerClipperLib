@@ -30,3 +30,10 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - nuget environment created with gh: required reviewer m4bwav, deployment rule tag v*, secret NUGET_USER.
 - Phase 3 review (read-only subagent, 18 tool calls, 4 minutes): 12 findings, all fixed or named (E11); see notes/2026-09-27-phase-3-review-findings.md. PublicApi-1.1.0.txt listed from the published DLL by reflection (PowerShell: Assembly.LoadFile, GetExportedTypes, public declared methods, constructors and properties with parameter names). 193 tests per framework, green on net10.0 and net48. Committed as d033b12.
 - The Write and Edit tools decode backslash-u escapes (backslash, u, four hex digits) in their input: a C# escape for "<" became a literal "<" three times, which silently disabled the config escaping. Write such text with Python and chr(92), then grep the file.
+
+## [2026-09-27] add | Phases 4 to 7: merge, beta, release, wrap-up
+- PR #1 merged by Mark as ab3a984 (merge commit, 17:03). ci on master 36335507076 green. Tag v2.0.0-beta.1 (admin bypass of the tag ruleset); release 36335667408: build, attest, Mark approved the nuget environment, both packages pushed, GitHub Release v2.0.0-beta.1.
+- verify-published 36336494800: Windows green; Linux and macOS failed at dotnet tool install ("version not found") because the registration index committed the tool at 17:23:35, after the flat container listed it. Rerun of the failed jobs: green. PR #4 (b4c6b9d) waits for both indexes.
+- PR #3 (versions 2.0.0, changelog dated; the full notes moved under 2.0.0) merged by Mark as 4a41b49; ci 36336712092 green; tag v2.0.0; release 36336887025 approved by Mark and green, GitHub Release v2.0.0. Dependabot #2 (SDK 10.0.401) merged as d57ca52 after the release.
+- verify-published 36338281647 for 2.0.0 (with the #4 wait): green on Linux, macOS and Windows. Skill: C-20260927-9 nuget-coverage-complete, L-062 verify-waits-both-indexes (package-modernize 49d227b).
+## [2026-09-27] index | rebuilt (5 entries)
