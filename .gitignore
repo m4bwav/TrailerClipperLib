@@ -13,3 +13,6 @@ BenchmarkDotNet.Artifacts/
 
 # Test results and coverage
 TestResults/
+
+# The golden capture project is run by hand in a scratch folder, never restored here.
+tests/Golden/Capture/packages.lock.json
