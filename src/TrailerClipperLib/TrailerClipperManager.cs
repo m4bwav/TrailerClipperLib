@@ -41,7 +41,8 @@ namespace TrailerClipperLib
         {
             CheckLengths(options);
 
-            var files = Directory.GetFiles(options.InputPath!);
+            // In name order: 1.1.0 ran on Windows, where the file system lists names in order; macOS and Linux may not.
+            var files = Directory.GetFiles(options.InputPath!).OrderBy(f => f, StringComparer.Ordinal).ToArray();
             var failures = new ConcurrentQueue<Exception>();
 
             if (options.MultiTaskFiles)

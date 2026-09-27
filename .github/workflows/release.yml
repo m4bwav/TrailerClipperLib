@@ -69,8 +69,17 @@ jobs:
             exit 1
           fi
           printf '%s\n' "$notes" > release-notes.md
-      - name: Install ffmpeg for the golden test
-        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      # Ubuntu's apt ffmpeg is 6.1 (2023), whose ffprobe measures MP3 files differently from current builds; take the
+      # current 9.0 line from BtbN/FFmpeg-Builds and check it against that release's checksums.
+      - name: Install ffmpeg 9.0 (Linux)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP"
+          gh release download latest -R BtbN/FFmpeg-Builds -p 'ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz' -p checksums.sha256
+          grep ' ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz$' checksums.sha256 | sha256sum -c -
+          tar -xf ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz
+          echo "$RUNNER_TEMP/ffmpeg-n9.0-latest-linux64-gpl-9.0/bin" >> "$GITHUB_PATH"
       - run: dotnet restore --locked-mode
       - run: dotnet build --no-restore -c Release
       - run: dotnet test --no-build -c Release -f net10.0

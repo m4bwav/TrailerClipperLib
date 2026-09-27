@@ -37,6 +37,13 @@ namespace TrailerClipperLib.Tests
             var old = Environment.CurrentDirectory;
             try
             {
+                // The resolved form of the folder (on macOS the temp folder is reached through /private), so the
+                // runner's <work> token replaces the paths the clipper prints.
+                Directory.CreateDirectory(work);
+                Environment.CurrentDirectory = work;
+                work = Directory.GetCurrentDirectory();
+                Environment.CurrentDirectory = old;
+
                 _actual = JsonNode.Parse(GoldenRunner.Replay(Path.Combine(GoldenFolder, "fixtures"), work))!["cases"]!.AsArray();
             }
             finally

@@ -41,9 +41,18 @@ jobs:
           cache: true
           cache-dependency-path: '**/packages.lock.json'
       # The golden test clips real WAV and MP3 files, so every runner needs ffmpeg and ffprobe.
-      - name: Install ffmpeg (Linux)
+      # Ubuntu's apt ffmpeg is 6.1 (2023), whose ffprobe measures MP3 files differently from current builds; take the
+      # current 9.0 line from BtbN/FFmpeg-Builds and check it against that release's checksums.
+      - name: Install ffmpeg 9.0 (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP"
+          gh release download latest -R BtbN/FFmpeg-Builds -p 'ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz' -p checksums.sha256
+          grep ' ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz$' checksums.sha256 | sha256sum -c -
+          tar -xf ffmpeg-n9.0-latest-linux64-gpl-9.0.tar.xz
+          echo "$RUNNER_TEMP/ffmpeg-n9.0-latest-linux64-gpl-9.0/bin" >> "$GITHUB_PATH"
       - name: Install ffmpeg (macOS)
         if: runner.os == 'macOS'
         run: brew install ffmpeg
