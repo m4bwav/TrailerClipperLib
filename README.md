@@ -1,5 +1,7 @@
 # TrailerClipper
 
+![A film reel, cut strips of film and a pair of scissors on an editing table under a lamp](https://raw.githubusercontent.com/m4bwav/TrailerClipperLib/master/.github/images/banner.jpg)
+
 [![NuGet](https://img.shields.io/nuget/v/TrailerClipper)](https://www.nuget.org/packages/TrailerClipper)
 [![ci](https://github.com/m4bwav/TrailerClipperLib/actions/workflows/ci.yml/badge.svg)](https://github.com/m4bwav/TrailerClipperLib/actions/workflows/ci.yml)
 [![Downloads](https://img.shields.io/nuget/dt/TrailerClipper)](https://www.nuget.org/packages/TrailerClipper)
