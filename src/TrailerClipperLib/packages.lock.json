@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "FFMpegCore": {
         "type": "Direct",
-        "requested": "[5.5.0, )",
-        "resolved": "5.5.0",
-        "contentHash": "KVqajQUb9W7IysZGw05SwQURARyNoEIs798kIbkTDX7LfWgoivejtvsui0yJv0HLHH1tQiMiSWSW4eMR5zFUvw==",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "KOryAIsgh/qE5fsEaeL3etmMp/7nxmy40w5lUGcUyg+Dp0TSWn/R+kbzcqgVvAoKeC9NR5rQZJ2Gm4s/9f6gFw==",
         "dependencies": {
           "Instances": "3.1.0",
           "System.Text.Json": "9.0.10"
@@ -111,9 +111,9 @@
     "net10.0": {
       "FFMpegCore": {
         "type": "Direct",
-        "requested": "[5.5.0, )",
-        "resolved": "5.5.0",
-        "contentHash": "KVqajQUb9W7IysZGw05SwQURARyNoEIs798kIbkTDX7LfWgoivejtvsui0yJv0HLHH1tQiMiSWSW4eMR5zFUvw==",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "KOryAIsgh/qE5fsEaeL3etmMp/7nxmy40w5lUGcUyg+Dp0TSWn/R+kbzcqgVvAoKeC9NR5rQZJ2Gm4s/9f6gFw==",
         "dependencies": {
           "Instances": "3.1.0"
         }
